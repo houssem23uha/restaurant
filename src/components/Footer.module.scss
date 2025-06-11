@@ -1,0 +1,44 @@
+.footer {
+  color: white;
+  min-height: 8rem;
+  background-color: var(--secondary);
+  font-size: 1rem;
+  position: relative;
+  img {
+    width: 13rem;
+  }
+  p {
+    color: white;
+    margin: 0;
+  }
+  .footerBottom {
+    border-top: 1px solid white;
+  }
+  .socialMedia {
+    color: white;
+  }
+
+  .goToTop {
+    display: block;
+    position: absolute;
+    top: -1.6rem;
+    /*     left: calc(50% - 19px);
+ */
+    width: 3.8rem;
+    height: 3.8rem;
+    border-radius: 50%;
+    text-decoration: none;
+    background-color: var(--secondary);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-image: url(../assets/go-to-top.svg);
+
+    i {
+      position: relative;
+      top: -0.5rem;
+    }
+  }
+  .footerContainer {
+    font-size: 0.8rem;
+  }
+}

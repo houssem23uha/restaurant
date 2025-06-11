@@ -1,0 +1,105 @@
+.btn {
+  padding: 0.5rem 1.5rem;
+  border-radius: 2rem;
+  cursor: pointer;
+  transition: 0.2s opacity;
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: white;
+  border: 2px solid var(--primary);
+  i {
+    color: white !important;
+  }
+  &:hover {
+    border: 2px solid var(--primary);
+    background-color: var(--primary);
+  }
+}
+
+.btn-reverse-primary {
+  border: 2px solid var(--primary);
+  color: var(--primary);
+  background-color: white;
+  &:hover {
+    border: 2px solid var(--primary);
+  }
+}
+
+.separator {
+  width: 0.2rem;
+  height: 2rem;
+  background-color: var(--gray-2);
+}
+.separatorSecondary {
+  width: 0.2rem;
+  height: 0.2rem;
+  background-color: var(--gray-2);
+}
+
+a.logo {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.6rem;
+  text-decoration: none;
+}
+
+.logo-primary {
+  color: var(--primary);
+  font-weight: 700;
+
+  background-color: white;
+}
+
+.logo-reverse-primary {
+  color: white;
+  font-weight: 500;
+
+  background-color: var(--secondary);
+}
+
+.heart-circle {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  background-color: white;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+}
+
+.label {
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  background-color: white;
+  color: var(--text-color);
+}
+
+.note-recette {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rating {
+  color: var(--primary);
+  font-size: 1.5rem;
+}
+
+.note-text {
+  font-size: 1.2rem;
+  color: var(--text-color);
+}
+
+.modal {
+  border-radius: 0;
+}

@@ -1,0 +1,43 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: white;
+  box-shadow: var(--box-shadow-nav);
+  color: var(--primary);
+  z-index: 10;
+  img {
+    width: 13rem;
+  }
+  .headerContainer {
+    min-height: 3rem;
+
+    form {
+      display: inline;
+      font-size: 1.2rem;
+      color: var(--text-color);
+      border: 0.1rem solid var(--gray-2);
+      border-radius: 2rem;
+      input {
+        padding: 0.5rem 1rem;
+        border: none;
+        outline: none;
+        background-color: transparent;
+      }
+    }
+  }
+  .headerNav {
+    min-height: 3rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+  .headerNavItem {
+    color: var(--text-color);
+    min-height: 2rem;
+    font-size: 0.8rem;
+  }
+  i {
+    color: var(--primary);
+  }
+}

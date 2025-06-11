@@ -1,0 +1,34 @@
+.recipeCard {
+  border-top-left-radius: 2rem;
+  border-top-right-radius: 2rem;
+  height: 25rem;
+  cursor: pointer;
+  &:hover {
+    img {
+      transform: scale(1.1);
+    }
+    .recipeTitle {
+      color: var(--primary);
+    }
+  }
+}
+
+.imageContainer {
+  height: 20rem;
+  border-radius: 2rem;
+  overflow: hidden;
+  img {
+    transition: 1s transform;
+    width: 100%;
+  }
+}
+
+.recipeCardInfo {
+  height: 5rem;
+  transition: 0.2s color;
+}
+.title {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--text-color);
+}

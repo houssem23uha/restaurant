@@ -1,0 +1,44 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-size: 62.5%; /* 1rem = 10px */
+  font-family: var(--font-family);
+  height: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: var(--text-color);
+  background-color: var(--gray-2);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+ul {
+  list-style: none;
+  padding-left: 0px;
+  margin: 0;
+  li {
+    display: inline;
+  }
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+img {
+  max-width: 100%;
+}
