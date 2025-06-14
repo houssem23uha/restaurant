@@ -1,0 +1,82 @@
+.PanierComponent {
+  font-size: 1rem;
+  .ShippingAddress {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    font-weight: bold;
+    padding: 0.8rem 1.6rem;
+    color: var(--primary);
+    min-height: 3rem;
+    color: var(--primary);
+    background-color: var(--off-white-blush);
+    span {
+      padding: 0 0.8rem;
+    }
+  }
+  .Content {
+    padding: 0 1.6rem;
+    .AdditionCard {
+      padding: 1.8rem 1.2rem;
+      border-radius: 2rem;
+      background-color: var(--gray-3);
+      button {
+        border: 1px solid var(--primary);
+      }
+    }
+    .Order {
+      p {
+        margin: 1.5rem 0 0 2rem;
+        font-weight: bold;
+      }
+
+      .BasketList > *:not(:last-child) {
+        border-bottom: 2px solid var(--gray-2);
+        margin-bottom: 0.5rem;
+        padding-bottom: 0.5rem;
+      }
+    }
+  }
+  .PlaceOrder {
+    position: sticky;
+    bottom: 0;
+    background-color: white; // Important si tu veux éviter les chevauchements visuels
+
+    padding: 1.4rem;
+    .TotalPrice {
+      p {
+        font-size: 1.2rem;
+        color: var(--primary);
+        font-weight: bold;
+        margin: 0;
+      }
+
+      span {
+        font-size: 0.9rem;
+        color: gray;
+      }
+    }
+    button {
+      padding: 1rem 1.4rem;
+      border-radius: 0.2rem;
+      background-color: var(--primary);
+      color: white;
+    }
+  }
+}
+
+button {
+  padding: 0.4rem 0.8rem;
+  border: 0;
+  border-radius: 2rem;
+  color: var(--primary);
+  font-weight: bold;
+  background-color: white;
+
+  transition: color 0.2s, background-color 0.2s, opacity;
+  &:hover {
+    color: white;
+    background-color: var(--primary);
+    opacity: 0.8;
+  }
+}

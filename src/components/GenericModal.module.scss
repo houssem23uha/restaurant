@@ -1,0 +1,37 @@
+.customOffcanvas {
+  width: 90vw !important;
+  width: 30rem !important;
+  height: 100vh;
+  overflow: hidden;
+  .customOffcanvasHeader {
+    padding: 1.5rem;
+    flex-shrink: 0;
+    z-index: 2;
+
+    .customTitle {
+      font-size: 1.5rem;
+      color: var(--text-color);
+      font-weight: 700;
+    }
+    .customClose {
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      color: var(--primary);
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      &:hover {
+        opacity: 0.8;
+      }
+      cursor: pointer;
+    }
+  }
+  .customOffcanvasBody {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}

@@ -30,6 +30,19 @@
   }
 }
 
+.btn-danger {
+  background-color: var(--danger);
+  color: white;
+  border: 2px solid var(--danger);
+  i {
+    color: white !important;
+  }
+  &:hover {
+    border: 2px solid var(--danger);
+    background-color: var(--danger);
+  }
+}
+
 .separator {
   width: 0.2rem;
   height: 2rem;

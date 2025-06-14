@@ -1,0 +1,54 @@
+.PreviewItem {
+  padding: 1.2rem;
+  .InfoContainer {
+    .PictureContainer {
+      margin: 0 12px 12px 0;
+      img {
+        width: 100px;
+        height: 100px;
+        border-radius: 0.5rem;
+      }
+    }
+    .InfosAndAction {
+      .Infos {
+        .Capacity {
+          span {
+            background-color: var(--off-white-blush);
+            font-weight: bold;
+            padding: 0.6rem 1rem;
+            border-radius: 2rem;
+          }
+        }
+      }
+      button {
+      }
+    }
+  }
+  .PriceAndAction {
+    font-size: 20px;
+    font-weight: bold;
+    .CounterInput {
+      border: 2px solid var(--off-white-blush);
+
+      & > :first-child {
+        color: var(--light-blue);
+        border-right: 2px solid var(--off-white-blush);
+        &:hover {
+          color: white;
+          background-color: var(--light-blue);
+        }
+      }
+      & > :last-child {
+        color: var(--light-blue);
+        border-left: 2px solid var(--off-white-blush);
+        &:hover {
+          color: white;
+          background-color: var(--light-blue);
+        }
+      }
+
+      .InputValueContainer {
+      }
+    }
+  }
+}
