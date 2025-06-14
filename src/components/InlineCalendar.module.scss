@@ -1,0 +1,21 @@
+/* styles/globals.scss ou InlineCalendar.module.scss */
+
+.custom-calendar {
+  font-family: inherit;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 1rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+.custom-calendar .rdp-day_selected {
+  background-color: #4b3a01;
+  color: white;
+}
+
+.custom-calendar .rdp-day_today {
+  font-weight: bold;
+  border: 1px solid #4b3a01;
+}

@@ -33,7 +33,7 @@ function Header() {
             className={`${styles.headerNav} d-flex flex-row justify-content-center align-items-center ms-3 me-3 gap-4`}
           >
             <li>
-              <a href="#">Réservation</a>
+              <a href="/reservation">Réservation</a>
             </li>
             <span className="separator"></span>
 
