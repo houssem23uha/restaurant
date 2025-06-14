@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import type { Customer } from "../../../models/Customer";
-import { createCustomer } from "../../../services/customerService";
+import type { Customer } from "../../models/Customer";
+import { createCustomer } from "../../services/customerService";
 
 export function CustomerCreateForm() {
   const [customer, setCustomer] = useState<Partial<Customer>>({

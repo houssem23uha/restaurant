@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import type { Customer } from "../../../models/Customer";
-import { getCustomerById, updateCustomer } from "../../../services/customerService";
+import type { Customer } from "../../models/Customer";
+import { getCustomerById, updateCustomer } from "../../services/customerService";
 
 type Props = {
   id: number;

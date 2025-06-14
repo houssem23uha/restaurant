@@ -1,7 +1,7 @@
 // src/components/Customer/CustomerList.tsx
 import React, { useEffect, useState } from "react";
-import type { Customer } from "../../../models/Customer";
-import { getCustomers, deleteCustomer } from "../../../services/customerService";
+import type { Customer } from "../../models/Customer";
+import { getCustomers, deleteCustomer } from "../../services/customerService";
 
 export function CustomerList() {
   const [customers, setCustomers] = useState<Customer[]>([]);
