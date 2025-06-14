@@ -1,7 +1,7 @@
 import { Route, BrowserRouter, Routes } from "react-router-dom";
 
 import styles from "./Content.module.scss";
-import Menu from "./menu";
+import Menu from "./Menu";
 import HomeContent from "./HomeContent";
 import FavoriteDishes from "./FavoriteDishes";
 
