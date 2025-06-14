@@ -1,7 +1,7 @@
-import React, { useRef, useEffect, useState } from "react";
-import "./SliderTabs.scss";
+import { useRef, useEffect, useState } from "react";
+import styles from "./SliderTabs.module.scss";
 
-const tabsData = ["Tab 1", "Tab 2", "Tab 3"];
+const tabsData = ["Entree", "Plat", "Dessert", "Boisson"];
 
 const SliderTabs = () => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -17,22 +17,22 @@ const SliderTabs = () => {
   }, [activeIndex]);
 
   return (
-    <div className="slider-tabs">
-      <div className="tabs-container">
-        {tabsData.map((label, index) => (
-          <button
-            key={index}
-            ref={(el) => {
-              tabsRef.current[index] = el;
-            }}
-            className={`tab-button ${activeIndex === index ? "active" : ""}`}
-            onClick={() => setActiveIndex(index)}
-          >
-            {label}
-          </button>
-        ))}
-        <div className="slider" ref={sliderRef} />
-      </div>
+    <div
+      className={`${styles.SliderTabs} d-flex justify-content-center align-items-center gap-2`}
+    >
+      {tabsData.map((label, index) => (
+        <button
+          key={index}
+          ref={(el) => {
+            tabsRef.current[index] = el;
+          }}
+          className={`${styles.TabButton} flex-grow-1`}
+          onClick={() => setActiveIndex(index)}
+        >
+          {label}
+        </button>
+      ))}
+      <div className={`${styles.Slider}`} ref={sliderRef} />
     </div>
   );
 };

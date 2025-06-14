@@ -9,7 +9,6 @@ body {
   color: var(--text-color);
   background-color: var(--gray-2);
 }
-
 h1,
 h2,
 h3,
@@ -40,4 +39,12 @@ a {
 
 img {
   max-width: 100%;
+}
+
+.grid {
+  display: grid;
+  place-content: center;
+  grid-template-columns: repeat(3, 20rem);
+  grid-auto-columns: repeat(3, 20rem);
+  gap: 2rem;
 }
