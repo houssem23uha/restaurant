@@ -1,0 +1,25 @@
+.Breadcrumb {
+  margin: 1rem 0;
+  font-size: 1rem;
+  list-style: none;
+  li {
+    &::after {
+      content: ">";
+      margin: 0 8px;
+      color: var(--primary);
+    }
+
+    &:last-child {
+      &::after {
+        content: "";
+        margin: 0;
+      }
+
+      a {
+        pointer-events: none;
+        cursor: default;
+        text-decoration: none;
+      }
+    }
+  }
+}

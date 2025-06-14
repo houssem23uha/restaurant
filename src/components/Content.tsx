@@ -1,23 +1,32 @@
+import { Route, BrowserRouter, Routes } from "react-router-dom";
+
 import styles from "./Content.module.scss";
-import Recipe from "./recipe";
+import Menu from "./Menu";
+import HomeContent from "./HomeContent";
+import FavoriteDishes from "./FavoriteDishes";
+
 function Content() {
   return (
-    <div className={`${styles.content} container flex-fill mt-2 p-4`}>
-      <div className={styles.grid}>
-        <Recipe />
-        <Recipe />
-        <Recipe />
-        <Recipe />
-        <Recipe />
-        <Recipe />
-        <Recipe />
-        <Recipe />
-        <Recipe />
-        <Recipe />
-        <Recipe />
-        <Recipe />
+    <BrowserRouter>
+      <div className={`${styles.appContainer} d-flex flex flex-column`}>
+        <div className={`${styles.content} container flex-fill mt-2 p-4`}>
+          <Routes>
+            <Route path="/" element={<HomeContent />} />
+            <Route path="/menu" element={<Menu />} />
+            <Route path="/menu/items" element={<HomeContent />} />
+            <Route path="/orders" element={<HomeContent />} />
+            <Route path="/orders/history" element={<HomeContent />} />
+            <Route path="/reservations" element={<HomeContent />} />
+            <Route path="/delivery-info" element={<HomeContent />} />
+            <Route path="/user/account" element={<HomeContent />} />
+            <Route path="/user/account/favoris" element={<FavoriteDishes />} />
+            <Route path="/user/account/orders" element={<HomeContent />} />
+            <Route path="/user/account/settings" element={<HomeContent />} />
+            <Route path="/contact" element={<HomeContent />} />
+          </Routes>
+        </div>
       </div>
-    </div>
+    </BrowserRouter>
   );
 }
 

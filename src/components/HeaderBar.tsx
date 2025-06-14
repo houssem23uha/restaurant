@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styles from "./HeaderBar.module.scss";
 import GenericModal from "./GenericModal";
-import Basket from "./basket";
+import Basket from "./Basket";
 
 function HeaderBar() {
   const [showPanier, setShowPanier] = useState(false);

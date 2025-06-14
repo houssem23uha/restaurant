@@ -62,28 +62,28 @@ function SearchItem() {
            */}
           <div className={`${styles.BasketList}`}>
             <BasketPreviewItem
-              search={true}
+              isSearchComponent={true}
               quantity={0}
               price={3}
               totalPrice={totalPrice}
               setTotalPrice={setTotalPrice}
             />
             <BasketPreviewItem
-              search={true}
+              isSearchComponent={true}
               quantity={0}
               price={6}
               totalPrice={totalPrice}
               setTotalPrice={setTotalPrice}
             />
             <BasketPreviewItem
-              search={true}
+              isSearchComponent={true}
               quantity={0}
               price={2}
               totalPrice={totalPrice}
               setTotalPrice={setTotalPrice}
             />
             <BasketPreviewItem
-              search={true}
+              isSearchComponent={true}
               quantity={0}
               price={2}
               totalPrice={totalPrice}
