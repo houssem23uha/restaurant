@@ -19,3 +19,12 @@
   font-weight: bold;
   border: 1px solid #4b3a01;
 }
+
+/* Styles pour dates désactivées */
+.disabled-day {
+  color: #999999;      /* gris clair */
+  background-color: transparent !important;
+  pointer-events: none; /* pas cliquable */
+  opacity: 0.6;
+}
+

@@ -62,7 +62,7 @@ const ReservationForm = () => {
                     >
                         <i className="fa-solid fa-minus" />
                     </button>
-                    <span className="InputValueContainer">{covers}</span>
+                    <span className={styles.inputValueContainer}>{covers}</span>
                     <button
                         type="button"
                         onClick={() => setCovers((c) => c + 1)}
@@ -104,11 +104,17 @@ const ReservationForm = () => {
             >
                 <div className={styles.dateWrapper}>
                     <InlineCalendar
-                        selected={date ? new Date(date) : undefined}
+                        selected={date ? new Date(date + "T00:00:00") : undefined}
                         onSelect={(d) => {
-                            setDate(d?.toISOString().split("T")[0]);
-                            setActiveSection(null);
-                        }}
+                            if (!d) return;
+                            const year = d.getFullYear();
+                            const month = String(d.getMonth() + 1).padStart(2, '0');
+                            const day = String(d.getDate()).padStart(2, '0');
+                            const formattedDate = `${year}-${month}-${day}`;
+                            setDate(formattedDate);
+                            setActiveSection(null); // referme après sélection
+                            }
+                        }
                     />
                 </div>
             </div>
