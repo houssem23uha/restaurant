@@ -3,7 +3,7 @@ import itemImage from "../assets/images/recette.jpg";
 import { useState } from "react";
 
 function BasketPreviewItem({
-  search,
+  isSearchComponent,
   quantity,
   price,
   totalPrice,
@@ -43,8 +43,10 @@ function BasketPreviewItem({
             </div>
           </div>
           <button>
-            {!search && <i className="fa-solid fa-trash fa fa-lg"></i>}
-            {search && (
+            {!isSearchComponent && (
+              <i className="fa-solid fa-trash fa fa-lg"></i>
+            )}
+            {isSearchComponent && (
               <>
                 <i className="fa-solid fa-cart-shopping fa fa-lg"></i>
                 <i className="fa-solid fa-plus fa fa-xs"></i>

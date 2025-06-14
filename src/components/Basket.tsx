@@ -55,28 +55,28 @@ function Basket() {
            */}
           <div className={`${styles.BasketList}`}>
             <BasketPreviewItem
-              search={false}
+              isSearchComponent={false}
               quantity={0}
               price={3}
               totalPrice={totalPrice}
               setTotalPrice={setTotalPrice}
             />
             <BasketPreviewItem
-              search={false}
+              isSearchComponent={false}
               quantity={0}
               price={6}
               totalPrice={totalPrice}
               setTotalPrice={setTotalPrice}
             />
             <BasketPreviewItem
-              search={false}
+              isSearchComponent={false}
               quantity={0}
               price={2}
               totalPrice={totalPrice}
               setTotalPrice={setTotalPrice}
             />
             <BasketPreviewItem
-              search={false}
+              isSearchComponent={false}
               quantity={0}
               price={2}
               totalPrice={totalPrice}
