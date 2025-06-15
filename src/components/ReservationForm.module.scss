@@ -1,3 +1,14 @@
+.formContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; // pleine hauteur d'écran
+  //padding: 40px 16px; // marge sur les côtés pour mobile
+  //box-sizing: border-box;
+  //background: #fff8ee; // optionnel : couleur de fond
+}
+
+
 /* === Formulaire de réservation === */
 .reservationForm {
   max-width: 640px;
@@ -8,6 +19,15 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   font-family: "Inter", sans-serif;
   color: #2a2a2a;
+
+  .successMessage {
+  margin-top: 1rem;
+  font-size: 1.2rem;
+  color: #2e7d32; // vert foncé pour "succès"
+  font-weight: bold;
+  text-align: center;
+}
+
 
   h2 {
     font-size: 2rem;

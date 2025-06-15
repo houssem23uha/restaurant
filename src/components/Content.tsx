@@ -4,6 +4,8 @@ import styles from "./Content.module.scss";
 import Menu from "./Menu";
 import HomeContent from "./HomeContent";
 import FavoriteDishes from "./FavoriteDishes";
+import Rest from "./tests/Rest";
+import ReservationForm from "./ReservationForm";
 
 function Content() {
   return (
@@ -23,6 +25,9 @@ function Content() {
             <Route path="/user/account/orders" element={<HomeContent />} />
             <Route path="/user/account/settings" element={<HomeContent />} />
             <Route path="/contact" element={<HomeContent />} />
+            <Route path="/rest" element={<Rest />} />
+            <Route path="/reservation" element={<ReservationForm />} />
+
           </Routes>
         </div>
       </div>

@@ -1,5 +1,4 @@
 import Header from "./components/Header";
-import styles from "./app.module.scss";
 import Footer from "./components/Footer";
 import Content from "./components/Content";
 import ReservationForm from "./components/ReservationForm";
