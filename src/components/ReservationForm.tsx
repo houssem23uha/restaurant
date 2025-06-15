@@ -25,6 +25,15 @@ const dummyCustomer: Customer = {
 
 const HOURS: Slot[] = ["MORNING", "AFTERNOON", "EVENING"];
 
+const slotToLabel = (slot: Slot) => {
+  switch (slot) {
+    case "MORNING": return "Matin";
+    case "AFTERNOON": return "Midi";
+    case "EVENING": return "Soir";
+    default: return slot;
+  }
+};
+
 const ReservationForm = () => {
   const [covers, setCovers] = useState(2);
   const [date, setDate] = useState("");
@@ -63,7 +72,7 @@ const ReservationForm = () => {
     const newReservation: Omit<Reservation, "id"> = {
       slot: selectedTime,
       nbPersons: covers,
-      date: date,
+      date,
       customer: dummyCustomer,
       version: 0,
     };
@@ -74,10 +83,8 @@ const ReservationForm = () => {
           `Réservation confirmée pour ${covers} personnes le ${new Date(date).toLocaleDateString(
               "fr-FR",
               { weekday: "long", day: "numeric", month: "long" }
-          )} le ${selectedTime.toLowerCase()}`
+          )} (${slotToLabel(selectedTime)})`
       );
-
-      // Reset form
       setCovers(2);
       setSelectedTime("");
       setDate(new Date().toISOString().split("T")[0]);
@@ -88,7 +95,6 @@ const ReservationForm = () => {
         setError("Erreur lors de la création de la réservation.");
       }
     }
-
   };
 
   return (
@@ -96,10 +102,9 @@ const ReservationForm = () => {
         <form className={styles.reservationForm} onSubmit={handleSubmit} noValidate>
           <h2>Le Cercle</h2>
 
-          {error && <p style={{ color: "red" }}>{error}</p>}
-          {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
+          {error && <p className={styles.errorMessage}>{error}</p>}
 
-          {/* Couverts */}
+          {/* COUVERTS */}
           <label
               tabIndex={0}
               role="button"
@@ -109,7 +114,7 @@ const ReservationForm = () => {
               aria-controls="covers-selection"
               className={styles.toggleLabel}
           >
-            <i className="fa-solid fa-utensils" style={{ marginRight: "0.5rem" }} />
+            <i className="fa-solid fa-utensils" />
             <strong>Couverts</strong>{" "}
             <span className={styles.selectedValue}>{covers}</span>
           </label>
@@ -140,7 +145,7 @@ const ReservationForm = () => {
 
           <hr />
 
-          {/* Date */}
+          {/* DATE */}
           <label
               tabIndex={0}
               role="button"
@@ -174,8 +179,7 @@ const ReservationForm = () => {
                     const year = d.getFullYear();
                     const month = String(d.getMonth() + 1).padStart(2, "0");
                     const day = String(d.getDate()).padStart(2, "0");
-                    const formattedDate = `${year}-${month}-${day}`;
-                    setDate(formattedDate);
+                    setDate(`${year}-${month}-${day}`);
                     setActiveSection(null);
                   }}
               />
@@ -184,7 +188,7 @@ const ReservationForm = () => {
 
           <hr />
 
-          {/* Horaire */}
+          {/* HORAIRE */}
           <label
               tabIndex={0}
               role="button"
@@ -195,7 +199,9 @@ const ReservationForm = () => {
               className={styles.toggleLabel}
           >
             <strong>Horaire</strong>{" "}
-            <span className={styles.selectedValue}>{selectedTime}</span>
+            <span className={styles.selectedValue}>
+            {selectedTime ? slotToLabel(selectedTime as Slot) : ""}
+          </span>
           </label>
 
           <div
@@ -211,9 +217,8 @@ const ReservationForm = () => {
                         className={`${styles.timeSlot} ${selectedTime === hour ? styles.active : ""}`}
                         onClick={() => handleSelectTime(hour)}
                         aria-pressed={selectedTime === hour}
-                        aria-label={`Heure ${hour}`}
                     >
-                      {hour}
+                      {slotToLabel(hour)}
                     </button>
                   </li>
               ))}
@@ -229,7 +234,6 @@ const ReservationForm = () => {
                 {successMessage}
               </p>
           )}
-
         </form>
       </div>
   );

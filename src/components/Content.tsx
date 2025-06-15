@@ -3,13 +3,24 @@ import { Route, BrowserRouter, Routes, Outlet } from "react-router-dom";
 import Menu from "./Menu";
 import HomeContent from "./HomeContent";
 import FavoriteDishes from "./FavoriteDishes";
-import Reservation from "./Reservation.tsx";
+import ReservationComponent from "./ReservationComponent.tsx";
+import styles from "./Content.module.scss";
+import CustomerReservations from "./tests/reservation/CustomerReservations.tsx";
+
+const Layout = () => (
+    <div className="d-flex flex flex-column">
+      <div className={`${styles.content} container flex-fill mt-2 p-4`}>
+        <Outlet />
+      </div>
+    </div>
+);
 
 function Content() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/reservations" element={<Reservation />} />
+        <Route path="/reservation" element={<ReservationComponent />} />
+        <Route path="/customer_reservations" element={<CustomerReservations/>} />
 
         <Route element={<Layout />}>
           <Route path="/" element={<HomeContent />} />
