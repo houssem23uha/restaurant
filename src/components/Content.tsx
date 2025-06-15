@@ -4,6 +4,7 @@ import styles from "./Content.module.scss";
 import Menu from "./Menu";
 import HomeContent from "./HomeContent";
 import FavoriteDishes from "./FavoriteDishes";
+import Rest from "./tests/Rest";
 
 function Content() {
   return (
@@ -23,6 +24,7 @@ function Content() {
             <Route path="/account/orders" element={<HomeContent />} />
             <Route path="/account/settings" element={<HomeContent />} />
             <Route path="/contact" element={<HomeContent />} />
+            <Route path="/rest" element={<Rest />} />
           </Routes>
         </div>
       </div>
