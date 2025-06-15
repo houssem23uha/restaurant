@@ -5,6 +5,8 @@ import Menu from "./Menu";
 import HomeContent from "./HomeContent";
 import FavoriteDishes from "./FavoriteDishes";
 import Rest from "./tests/Rest";
+import Accueil from "./Accueil";
+
 
 function Content() {
   return (
@@ -28,6 +30,7 @@ function Content() {
           </Routes>
         </div>
       </div>
+      <Route path="/accueil" element={<Accueil />} />
     </BrowserRouter>
   );
 }

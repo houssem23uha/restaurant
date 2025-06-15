@@ -1,14 +1,33 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import styles from "./Header.module.scss";
-import HeaderBar from "./HeaderBar";
 import MenuModal from "./MenuModal";
+import HeaderBarHome from "./HeaderBarHome";
+
 /* import MenuModal from "./MenuModal";
  */
 function Header() {
+  const [scrolled, setScrolled] = useState(false);
   const [showModal, setModalOpen] = useState(false);
 
+  // Gestion de changement de couleur du header apres le scroll
+   useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 800) {  //Taille de l'ecran
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+//--
+
+
   return (
-    <div className={`${styles.header} d-flex flex-column mb-3`}>
+    <div className={`${styles.header} ${scrolled ? styles.headerScrolled : ""} d-flex flex-column mb-3`}>
       <div className="row">
         <div className="col d-flex flex-row align-items-center ms-3">
           <i
@@ -21,60 +40,14 @@ function Header() {
                 className="fa-solid fa-x fa-3x"
                 onClick={() => setModalOpen(false)}
               ></i>
-              <HeaderBar />
+              <HeaderBarHome />
             </MenuModal>
           )}
-          <HeaderBar />
+          <HeaderBarHome />
         </div>
       </div>
-      <div className="row">
-        <div className="col">
-          <ul
-            className={`${styles.headerNav} d-flex flex-row justify-content-center align-items-center ms-3 me-3 gap-4`}
-          >
-            <li>
-              <a href="#">Réservation</a>
-            </li>
-            <span className="separator"></span>
+      
 
-            <li>
-              <a href="#">Menu de la semaine</a>
-            </li>
-            <span className="separator"></span>
-
-            <li>
-              <a href="#">Nos plats</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div className="row">
-        <div className="col">
-          <ul
-            className={`${styles.headerNavItem} d-flex flex-row justify-content-center align-items-center ms-3 me-3 gap-4`}
-          >
-            <li>
-              <a href="#">Mieux manger</a>
-            </li>
-            <span className="separatorSecondary"></span>
-
-            <li>
-              <a href="#">
-                <i className="fa-solid fa-cocktail fa-lg me-2"></i>
-                Apéritif
-              </a>
-            </li>
-            <span className="separatorSecondary"></span>
-
-            <li>
-              <a href="#">
-                <i className="fa-solid fa-mug-saucer fa-lg me-2"></i>
-                Petit-déjeuner & brunch
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
     </div>
   );
 }

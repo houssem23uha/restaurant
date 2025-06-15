@@ -1,0 +1,73 @@
+
+.carteContainer {
+  padding: 2rem;
+  background-color: #fefefe;
+  font-family:  "Dancing Script", sherif;
+  color: #2f2f2f;
+}
+
+.categorySection {
+  margin-bottom: 1rem;
+}
+
+
+.menuTitle {
+  font-size: 3rem;
+  font-weight: 700;
+
+  padding-bottom: 0.4rem;
+  margin-bottom: 1.5rem;
+  color: #5c3a00;
+}
+
+.categoryTitle {
+  font-size: 1.8rem;
+  font-weight: 700;
+  border-bottom: 2px solid #8b5e3c;
+  padding-bottom: 0.4rem;
+  margin-bottom: 1.5rem;
+  color: #5c3a00;
+}
+
+.cardsWrapper {
+  display: flex;
+   flex-direction: column;
+
+}
+
+.card {
+     width: 100%;
+  background-color: #fffdf8;
+ // border: 1px solid #ddd;
+ // border-radius: 12px;
+  padding: 1rem 1.2rem;
+ // box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+  }
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.nom {
+  font-weight: 600;
+  font-size: 1.4rem;
+  color: #3b2f2f;
+}
+
+.prix {
+  font-weight: 500;
+  color: #8b5e3c;
+  font-size: 1.4rem;
+}
+
+.description {
+  font-size: 1.1rem;
+  color: #555;
+}
