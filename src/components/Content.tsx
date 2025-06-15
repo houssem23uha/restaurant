@@ -16,12 +16,12 @@ function Content() {
             <Route path="/menu/items" element={<HomeContent />} />
             <Route path="/orders" element={<HomeContent />} />
             <Route path="/orders/history" element={<HomeContent />} />
-            <Route path="/reservations" element={<HomeContent />} />
+            <Route path="/reservation" element={<HomeContent />} />
             <Route path="/delivery-info" element={<HomeContent />} />
-            <Route path="/user/account" element={<HomeContent />} />
-            <Route path="/user/account/favoris" element={<FavoriteDishes />} />
-            <Route path="/user/account/orders" element={<HomeContent />} />
-            <Route path="/user/account/settings" element={<HomeContent />} />
+            <Route path="/account" element={<HomeContent />} />
+            <Route path="/account/favoris" element={<FavoriteDishes />} />
+            <Route path="/account/orders" element={<HomeContent />} />
+            <Route path="/account/settings" element={<HomeContent />} />
             <Route path="/contact" element={<HomeContent />} />
           </Routes>
         </div>
