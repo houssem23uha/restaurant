@@ -3,6 +3,8 @@ import Footer from "./components/Footer";
 import Content from "./components/Content";
 import styles from "./App.module.scss";
 
+import styles from "./App.module.scss";
+
 function App() {
   /*   const isReservationPage = window.location.pathname === "/reservation";
    */

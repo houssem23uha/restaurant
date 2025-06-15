@@ -1,5 +1,5 @@
 import { Route, BrowserRouter, Routes, Outlet } from "react-router-dom";
-
+import styles from "./Content.module.scss";
 import Menu from "./Menu";
 import HomeContent from "./HomeContent";
 import FavoriteDishes from "./FavoriteDishes";
@@ -13,6 +13,14 @@ const Layout = () => (
         <Outlet />
       </div>
     </div>
+);
+
+const Layout = () => (
+  <div className="d-flex flex flex-column">
+    <div className={`${styles.content} container flex-fill mt-2 p-4`}>
+      <Outlet />
+    </div>
+  </div>
 );
 
 function Content() {
