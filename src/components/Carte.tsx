@@ -6,6 +6,7 @@ import { getItems } from "./services/itemService";
 
 
 const categories = ["Starter", "Main", "Dessert", "Drink"];
+const categoriesFrancais = ["Entrée", "Plat Principal", "Dessert", "Boisson"];
 
 
 
@@ -33,15 +34,17 @@ const [error, setError] = useState<string>("");
         <h1 className={styles.menuTitle}>La Carte</h1>
       {categories.map((category) => (
         <div key={category} className={styles.categorySection}>
-          <h2 className={styles.categoryTitle}>{category}</h2>
+          <h2 className={styles.categoryTitle}>
+            {categoriesFrancais[categories.indexOf(category)] ?? category}
+          </h2>
           <div className={styles.cardsWrapper}>
             {items
               .filter(item => item.category.toLowerCase() === category.toLowerCase())
               .map(item => (
                 <div key={item.ref} className={styles.card}>
                   <div className={styles.cardHeader}>
-                    <span className={styles.name}>{item.name}</span>
-                    <span className={styles.price}>{item.price}</span>
+                    <span className={styles.nom}>{item.name}</span>
+                    <span className={styles.prix}>{item.price}</span>
                   </div>
                   <p className={styles.description}>{item.description}</p>
                 </div>
