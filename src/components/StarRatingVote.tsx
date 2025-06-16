@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const StarRatingVote = ({ rating = 0, reviews = 0, onRate }) => {
+const StarRatingVote = ({ rating = 0, onRate }) => {
   const [selectedRating, setSelectedRating] = useState(null);
   const [hoveredRating, setHoveredRating] = useState(null);
 
@@ -57,15 +57,6 @@ const StarRatingVote = ({ rating = 0, reviews = 0, onRate }) => {
         <span style={{ fontSize: "1.2rem", color: "var(--text-color)" }}>
           {effectiveRating}/5
         </span>
-      </div>
-      <div
-        style={{
-          fontSize: "1rem",
-          color: "var(--text-color)",
-          marginTop: "4px",
-        }}
-      >
-        {reviews} avis
       </div>
     </div>
   );

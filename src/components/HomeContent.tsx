@@ -1,7 +1,7 @@
 import { useLocation } from "react-router-dom";
 import styles from "./HomeContent.module.scss";
-import Recipe from "./recipe";
-import { useState } from "react";
+/* import Recipe from "./recipe";
+ */ import { useState } from "react";
 
 function HomeContent() {
   const location = useLocation();
@@ -40,6 +40,7 @@ function HomeContent() {
         </div>
 
         <div className="grid">
+          {/*           <Recipe vote={false} />
           <Recipe vote={false} />
           <Recipe vote={false} />
           <Recipe vote={false} />
@@ -50,8 +51,7 @@ function HomeContent() {
           <Recipe vote={false} />
           <Recipe vote={false} />
           <Recipe vote={false} />
-          <Recipe vote={false} />
-          <Recipe vote={false} />
+          <Recipe vote={false} /> */}
         </div>
       </div>
     </>

@@ -1,9 +1,16 @@
+import { CATEGORIES } from "../components/types";
 import { useRef, useEffect, useState } from "react";
 import styles from "./SliderTabs.module.scss";
 
-const tabsData = ["Entree", "Plat", "Dessert", "Boisson"];
+import { capitalizeFirstLetter } from "../utils/helpers";
 
-const SliderTabs = () => {
+const tabsData = CATEGORIES;
+
+type Props = {
+  onFilterChange: (filter: string) => void;
+};
+
+const SliderTabs = ({ onFilterChange }: Props) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const tabsRef = useRef([]);
   const sliderRef = useRef(null);
@@ -14,6 +21,7 @@ const SliderTabs = () => {
       sliderRef.current.style.width = `${activeTab.offsetWidth}px`;
       sliderRef.current.style.left = `${activeTab.offsetLeft}px`;
     }
+    onFilterChange(tabsData[activeIndex]);
   }, [activeIndex]);
 
   return (
@@ -29,7 +37,7 @@ const SliderTabs = () => {
           className={`${styles.TabButton} flex-grow-1`}
           onClick={() => setActiveIndex(index)}
         >
-          {label}
+          {capitalizeFirstLetter(label)}
         </button>
       ))}
       <div className={`${styles.Slider}`} ref={sliderRef} />
