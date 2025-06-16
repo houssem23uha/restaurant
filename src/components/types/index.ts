@@ -1,4 +1,5 @@
-export type Category = "FOOD" | "DRINK" | "DESSERT"; // compléter si besoin
+export type Category = "STARTER" | "MAIN" | "DRINK" | "DESSERT"; // compléter si besoin
+export const CATEGORIES: Category[] = ["STARTER", "MAIN", "DRINK", "DESSERT"];
 
 export type Status = "PENDING" | "VALIDATED" | "CANCELLED"; // idem
 
@@ -36,6 +37,7 @@ export interface Address {
   // ajouter d'autres champs si tu en as dans ton modèle Java
   // Relation vers Customer par id ou objet selon besoin côté frontend
   customerId?: number; // ou customer?: Customer si tu veux l'objet complet
+  version: number;
 }
 
 export interface Authentification {

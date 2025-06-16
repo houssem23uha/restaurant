@@ -1,17 +1,20 @@
 import { useState } from "react";
 import styles from "./Header.module.scss";
-import HeaderBar from "./HeaderBar";
 import MenuModal from "./MenuModal";
 import GenericModal from "./GenericModal";
 import Basket from "./Basket";
+import HeaderBarHome from "./HeaderBarHome";
+
 /* import MenuModal from "./MenuModal";
  */
 function Header() {
+ 
   const [showModal, setModalOpen] = useState(false);
   const [showPanier, setShowPanier] = useState(false);
 
+ 
   return (
-    <div className={`${styles.header} d-flex flex-column mb-3`}>
+    <div className={`${styles.headerScrolled}   d-flex flex-column mb-3`}>
       <div className="row">
         <div className="col d-flex flex-row align-items-center ms-3">
           <i
@@ -24,31 +27,10 @@ function Header() {
                 className="fa-solid fa-x fa-3x"
                 onClick={() => setModalOpen(false)}
               ></i>
-              <HeaderBar />
+              <HeaderBarHome />
             </MenuModal>
           )}
-          <HeaderBar />
-        </div>
-      </div>
-      <div className="row">
-        <div className="col">
-          <ul
-            className={`${styles.headerNav} d-flex flex-row justify-content-center align-items-center ms-3 me-3 gap-4`}
-          >
-            <li>
-              <a href="/reservation">Réservation</a>
-            </li>
-            <span className="separator"></span>
-
-            <li>
-              <a href="/menu">Menu</a>
-            </li>
-            <span className="separator"></span>
-
-            <li>
-              <a href="/account/orders">Commandes</a>
-            </li>
-          </ul>
+          <HeaderBarHome />
         </div>
       </div>
       <div className="row">

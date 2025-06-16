@@ -1,5 +1,5 @@
 import styles from "./BasketPreviewItem.module.scss";
-import itemImage from "../assets/images/recette.jpg";
+import itemImage from "../assets/images/default.jpg";
 import { useState } from "react";
 
 function BasketPreviewItem({
