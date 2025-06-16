@@ -5,13 +5,16 @@ import { BrowserRouter, useLocation } from "react-router-dom";
 import Accueil from "./components/Accueil";
 import HeaderHome from "./components/HeaderHome";
 import styles from "./app.module.scss";
+import { CustomerProvider } from "./components/CustomerContext";
 
 
 function App() {
   return (
-    <BrowserRouter>
-      <AppContent />
-    </BrowserRouter>
+    <CustomerProvider>
+      <BrowserRouter>
+        <AppContent />
+      </BrowserRouter>
+    </CustomerProvider>
   );
 }
 
@@ -19,26 +22,28 @@ function AppContent() {
   const location = useLocation();
 
   if (location.pathname === "/") {
-    // Page Accueil avec son header
     return (
-    <>
-      <HeaderHome />
-      <Accueil />  
-      <Footer />
-    </>
-  );
+      <>
+        <HeaderHome />
+        <Accueil />
+        <Footer />
+      </>
+    );
   }
 
-  // Toutes les autres pages avec Header, Content, Footer et container
+  //const isLogin = location.pathname === "/login";
+
   return (
     <>
-      <Header />
-       <div className={`${styles.appContainer} d-flex flex flex-column`}>
-      <Content />  {/* Content contient les Routes sauf "/" */}
+      {/*!isLogin && <Header />*/}
+       <Header />
+      <div className={`${styles.appContainer} d-flex flex flex-column`}>
+        <Content />
       </div>
       <Footer />
     </>
   );
 }
+
 
 export default App;
