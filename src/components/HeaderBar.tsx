@@ -14,22 +14,6 @@ function HeaderBar() {
         <i className="fa-solid fa-utensils"></i>
         <span className="ms-3">GROUPE2</span>
       </a>
-      <form className=" flex-fill d-flex flex-row align-items-center m-2 p-2 gap-2">
-        <button type="submit" className="btn btn-reverse-primary border-0">
-          <i className="fa-solid fa-magnifying-glass"></i>
-        </button>
-        <label htmlFor="search" className="">
-          <strong>Je cherche</strong>
-        </label>
-        <input
-          type="text"
-          placeholder="Une recette, un ingrédient..."
-          className="flex-fill "
-        />
-        <button type="submit" className="btn btn-primary">
-          <i className="fa-solid fa-magnifying-glass"></i>
-        </button>
-      </form>
       <span className="separator"></span>
 
       <button

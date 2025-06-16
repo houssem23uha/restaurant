@@ -2,10 +2,13 @@ import { useState } from "react";
 import styles from "./Header.module.scss";
 import HeaderBar from "./HeaderBar";
 import MenuModal from "./MenuModal";
+import GenericModal from "./GenericModal";
+import Basket from "./Basket";
 /* import MenuModal from "./MenuModal";
  */
 function Header() {
   const [showModal, setModalOpen] = useState(false);
+  const [showPanier, setShowPanier] = useState(false);
 
   return (
     <div className={`${styles.header} d-flex flex-column mb-3`}>
@@ -38,12 +41,12 @@ function Header() {
             <span className="separator"></span>
 
             <li>
-              <a href="#">Menu de la semaine</a>
+              <a href="/menu">Menu</a>
             </li>
             <span className="separator"></span>
 
             <li>
-              <a href="#">Nos plats</a>
+              <a href="/account/orders">Commandes</a>
             </li>
           </ul>
         </div>
@@ -53,24 +56,32 @@ function Header() {
           <ul
             className={`${styles.headerNavItem} d-flex flex-row justify-content-center align-items-center ms-3 me-3 gap-4`}
           >
-            <li>
-              <a href="#">Mieux manger</a>
-            </li>
             <span className="separatorSecondary"></span>
 
             <li>
-              <a href="#">
-                <i className="fa-solid fa-cocktail fa-lg me-2"></i>
-                Apéritif
+              <a href="/account/favoris">
+                <i className="fa-solid fa-heart fa-lg me-2"></i>
+                Favories
               </a>
             </li>
             <span className="separatorSecondary"></span>
 
             <li>
-              <a href="#">
-                <i className="fa-solid fa-mug-saucer fa-lg me-2"></i>
-                Petit-déjeuner & brunch
+              <a href="#" onClick={() => setShowPanier(true)}>
+                <i className="fa-solid fa-basket-shopping fa-lg me-2"></i>
+                Panier
               </a>
+              {showPanier && (
+                <GenericModal
+                  show={showPanier}
+                  showHeader={true}
+                  onClose={() => setShowPanier(false)}
+                  title="Mon panier"
+                  placement="start"
+                >
+                  <Basket />
+                </GenericModal>
+              )}
             </li>
           </ul>
         </div>
