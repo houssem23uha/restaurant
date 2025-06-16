@@ -1,4 +1,4 @@
-import { CATEGORIES } from "../components/types";
+import { CATEGORIES } from "./types";
 import { useRef, useEffect, useState } from "react";
 import styles from "./SliderTabs.module.scss";
 
@@ -22,7 +22,7 @@ const SliderTabs = ({ onFilterChange }: Props) => {
       sliderRef.current.style.left = `${activeTab.offsetLeft}px`;
     }
     onFilterChange(tabsData[activeIndex]);
-  }, [activeIndex]);
+  }, [activeIndex, onFilterChange]);
 
   return (
     <div

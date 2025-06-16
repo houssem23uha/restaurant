@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Register.module.scss";
-import type { Customer , Address} from "./types/index";
+import type { Customer , Address} from "./types";
 import { useCreateCustomer } from "./hooks/customers/useCustomerMutations";
 import { useUploadPhoto } from "./hooks/customers/useCustomerPhoto";
 
@@ -96,142 +96,142 @@ export default function Register() {
   };
 
   return (
-    <div className={styles.createAccountContainer}>
-      <form className={styles.createAccountForm} onSubmit={handleSubmit}>
-        <h2>Créer un compte client</h2>
+      <div className={styles.createAccountContainer}>
+        <form className={styles.createAccountForm} onSubmit={handleSubmit}>
+          <h2>Créer un compte client</h2>
 
-        {errorMsg && <p className={styles.error}>{errorMsg}</p>}
+          {errorMsg && <p className={styles.error}>{errorMsg}</p>}
 
-        {photoPreview && (
-          <img
-            src={photoPreview}
-            alt="Prévisualisation"
-            className={styles.profilePicture}
-          />
-        )}
-        <input
-          type="file"
-          name="photo"
-          accept="image/*"
-          onChange={handleChange}
-        />
-
-        <div className={styles.fieldsGrid}>
-          <label>
-            Login :
-            <input
-              name="login"
-              value={customer.login || ""}
-              onChange={handleChange}
-              required
-            />
-          </label>
-
-          <label>
-            Mot de passe :
-            <input
-              name="password"
-              type="password"
-              value={customer.password || ""}
-              onChange={handleChange}
-              required
-            />
-          </label>
-
-          <label>
-            Prénom :
-            <input
-              name="firstname"
-              value={customer.firstname || ""}
-              onChange={handleChange}
-              required
-            />
-          </label>
-
-          <label>
-            Nom :
-            <input
-              name="lastname"
-              value={customer.lastname || ""}
-              onChange={handleChange}
-              required
-            />
-          </label>
-
-          <label>
-            Téléphone :
-            <input
-              name="phone"
-              value={customer.phone || ""}
-              onChange={handleChange}
-              required
-            />
-          </label>
-        </div>
-
-        {/* Bouton pour afficher / masquer le formulaire d'adresse */}
-        <div style={{ marginTop: "1rem" }}>
-          {!showAddressForm ? (
-            <button type="button" onClick={() => setShowAddressForm(true)}>
-              {address.street ? "Modifier mon adresse" : "Ajouter une adresse"}
-            </button>
-          ) : (
-            <fieldset style={{ marginTop: "1rem" }}>
-              <legend>Adresse</legend>
-
-              <label>
-                Numéro & Rue :
-                <input
-                  name="street"
-                  value={address.street || ""}
-                  onChange={handleAddressChange}
-                  required
-                />
-              </label>
-
-              <label>
-                Ville :
-                <input
-                  name="city"
-                  value={address.city || ""}
-                  onChange={handleAddressChange}
-                  required
-                />
-              </label>
-
-              <label>
-                Code postal :
-                <input
-                  name="postalCode"
-                  value={address.postalCode || ""}
-                  onChange={handleAddressChange}
-                  required
-                />
-              </label>
-
-              <label>
-                Pays :
-                <input
-                  name="country"
-                  value={address.country || ""}
-                  onChange={handleAddressChange}
-                  required
-                />
-              </label>
-
-              <div style={{ marginTop: "0.5rem" }}>
-                <button type="button" onClick={() => setShowAddressForm(false)}>
-                  Annuler
-                </button>
-              </div>
-            </fieldset>
+          {photoPreview && (
+              <img
+                  src={photoPreview}
+                  alt="Prévisualisation"
+                  className={styles.profilePicture}
+              />
           )}
-        </div>
+          <input
+              type="file"
+              name="photo"
+              accept="image/*"
+              onChange={handleChange}
+          />
 
-        <button  className="btn btn-reverse-primary"  style={{ marginTop: "1.5rem" }}>
-          Créer mon compte
-        </button>
-      </form>
-    </div>
+          <div className={styles.fieldsGrid}>
+            <label>
+              Login :
+              <input
+                  name="login"
+                  value={customer.login || ""}
+                  onChange={handleChange}
+                  required
+              />
+            </label>
+
+            <label>
+              Mot de passe :
+              <input
+                  name="password"
+                  type="password"
+                  value={customer.password || ""}
+                  onChange={handleChange}
+                  required
+              />
+            </label>
+
+            <label>
+              Prénom :
+              <input
+                  name="firstname"
+                  value={customer.firstname || ""}
+                  onChange={handleChange}
+                  required
+              />
+            </label>
+
+            <label>
+              Nom :
+              <input
+                  name="lastname"
+                  value={customer.lastname || ""}
+                  onChange={handleChange}
+                  required
+              />
+            </label>
+
+            <label>
+              Téléphone :
+              <input
+                  name="phone"
+                  value={customer.phone || ""}
+                  onChange={handleChange}
+                  required
+              />
+            </label>
+          </div>
+
+          {/* Bouton pour afficher / masquer le formulaire d'adresse */}
+          <div style={{ marginTop: "1rem" }}>
+            {!showAddressForm ? (
+                <button type="button" onClick={() => setShowAddressForm(true)}>
+                  {address.street ? "Modifier mon adresse" : "Ajouter une adresse"}
+                </button>
+            ) : (
+                <fieldset style={{ marginTop: "1rem" }}>
+                  <legend>Adresse</legend>
+
+                  <label>
+                    Numéro & Rue :
+                    <input
+                        name="street"
+                        value={address.street || ""}
+                        onChange={handleAddressChange}
+                        required
+                    />
+                  </label>
+
+                  <label>
+                    Ville :
+                    <input
+                        name="city"
+                        value={address.city || ""}
+                        onChange={handleAddressChange}
+                        required
+                    />
+                  </label>
+
+                  <label>
+                    Code postal :
+                    <input
+                        name="postalCode"
+                        value={address.postalCode || ""}
+                        onChange={handleAddressChange}
+                        required
+                    />
+                  </label>
+
+                  <label>
+                    Pays :
+                    <input
+                        name="country"
+                        value={address.country || ""}
+                        onChange={handleAddressChange}
+                        required
+                    />
+                  </label>
+
+                  <div style={{ marginTop: "0.5rem" }}>
+                    <button type="button" onClick={() => setShowAddressForm(false)}>
+                      Annuler
+                    </button>
+                  </div>
+                </fieldset>
+            )}
+          </div>
+
+          <button  className="btn btn-reverse-primary"  style={{ marginTop: "1.5rem" }}>
+            Créer mon compte
+          </button>
+        </form>
+      </div>
   );
 }

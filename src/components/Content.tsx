@@ -9,6 +9,7 @@ import Layout from "./Layout";
 import Register from "./Register";
 import Account from "./Account";
 import ReservationComponent from "./ReservationComponent.tsx";
+import CustomerReservations from "./CustomerReservations.tsx";
 
 function Content() {
   return (
@@ -23,7 +24,8 @@ function Content() {
         <Route path="/orders" element={<HomeContent />} />
         <Route path="/orders/history" element={<HomeContent />} />
         <Route path="/reservation" element={<ReservationComponent />} />
-        <Route path="/delivery-info" element={<HomeContent />} />
+          <Route path="/mesreservations" element={<CustomerReservations />} />
+          <Route path="/delivery-info" element={<HomeContent />} />
         <Route path="/user/account" element={<HomeContent />} />
         <Route path="/user/account/favoris" element={<FavoriteDishes />} />
         <Route path="/user/account/orders" element={<HomeContent />} />

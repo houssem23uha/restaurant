@@ -11,39 +11,39 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 const queryClient = new QueryClient();
 
 function App() {
-  return (
-    <BrowserRouter>
-      <QueryClientProvider client={queryClient}>
-        <CustomerProvider>
-          <AppContent />
-        </CustomerProvider>
-      </QueryClientProvider>
-    </BrowserRouter>
-  );
+    return (
+        <BrowserRouter>
+            <QueryClientProvider client={queryClient}>
+                <CustomerProvider>
+                    <AppContent />
+                </CustomerProvider>
+            </QueryClientProvider>
+        </BrowserRouter>
+    );
 }
 
 function AppContent() {
-  const location = useLocation();
+    const location = useLocation();
 
-  if (location.pathname === "/") {
+    if (location.pathname === "/") {
+        return (
+            <>
+                <HeaderHome />
+                <Accueil />
+                <Footer />
+            </>
+        );
+    }
+
     return (
-      <>
-        <HeaderHome />
-        <Accueil />
-        <Footer />
-      </>
+        <>
+            <Header />
+            <div className={`${styles.appContainer} d-flex flex flex-column`}>
+                <Content />
+            </div>
+            <Footer />
+        </>
     );
-  }
-
-  return (
-    <>
-      <Header />
-      <div className={`${styles.appContainer} d-flex flex flex-column`}>
-        <Content />
-      </div>
-      <Footer />
-    </>
-  );
 }
 
 export default App;

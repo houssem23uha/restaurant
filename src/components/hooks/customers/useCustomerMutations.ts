@@ -34,7 +34,7 @@ export const useDeleteCustomer = () => {
 
 
 export const useLoginCustomer = () =>
-  useMutation({
-    mutationFn: ({ login, password }: { login: string; password: string }) =>
-      loginCustomer(login, password),
-  });
+    useMutation({
+      mutationFn: ({ login, password }: { login: string; password: string }) =>
+          loginCustomer(login, password),
+    });

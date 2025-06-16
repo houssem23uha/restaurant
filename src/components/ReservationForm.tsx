@@ -2,26 +2,10 @@ import { useState, useEffect } from "react";
 import styles from "./ReservationForm.module.scss";
 import InlineCalendar from "./InlineCalendar.tsx";
 
-import type { Slot } from "./models/enums";
-import type { Reservation } from "./types";
-import type { Customer } from "./models/Customer";
-import {useCreateReservation} from "./hooks/reservation/useReservationMutations.ts";
+import { useCustomer } from "./CustomerContext";
 
-// Client factice
-const dummyCustomer: Customer = {
-  id: 1,
-  firstname: "John",
-  lastname: "Doe",
-  login: "john@example.com",
-  phone: "0600000000",
-  photo: "",
-  password: "secret",
-  orders: [],
-  addresses: [],
-  reservations: [],
-  items: [],
-  version: 0,
-};
+import type { Slot, Reservation } from "./types";
+import {useCreateReservation} from "./hooks/reservation/useReservationMutations.ts";
 
 const HOURS: Slot[] = ["MORNING", "AFTERNOON", "EVENING"];
 
@@ -41,6 +25,8 @@ const ReservationForm = () => {
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [error, setError] = useState<string>("");
   const [successMessage, setSuccessMessage] = useState<string>("");
+
+  const { customer } = useCustomer();
 
   const createMutation = useCreateReservation();
 
@@ -71,18 +57,23 @@ const ReservationForm = () => {
       return;
     }
 
+    if (!customer) {
+      setError("Utilisateur non connecté.");
+      return;
+    }
+
     const newReservation: Omit<Reservation, "id"> = {
       slot: selectedTime,
       nbPersons: covers,
       date,
-      customer: dummyCustomer,
+      customer, // 👈 client connecté ici
       version: 0,
     };
 
     createMutation.mutate(newReservation as Reservation, {
       onSuccess: () => {
         setSuccessMessage(
-            `Réservation confirmée pour ${covers} personnes le ${new Date(date).toLocaleDateString(
+            `${customer.firstname+customer.lastname.toUpperCase()}: Réservation confirmée pour ${covers} personnes le ${new Date(date).toLocaleDateString(
                 "fr-FR",
                 { weekday: "long", day: "numeric", month: "long" }
             )} (${slotToLabel(selectedTime)})`
@@ -105,8 +96,6 @@ const ReservationForm = () => {
       <div className={styles.formContainer}>
         <form className={styles.reservationForm} onSubmit={handleSubmit} noValidate>
           <h2>Le Cercle</h2>
-
-          {error && <p className={styles.errorMessage}>{error}</p>}
 
           {/* COUVERTS */}
           <label
@@ -233,11 +222,18 @@ const ReservationForm = () => {
             {createMutation.isPending ? "Envoi..." : "Réserver"}
           </button>
 
-          {successMessage && (
-              <p className={styles.successMessage}>
-                {successMessage}
-              </p>
-          )}
+            {successMessage && (
+                <p className={styles.successMessage}>
+                    {successMessage}
+                </p>
+            )}
+
+            {error && (
+                <p className={styles.errorMessageBottom}>
+                    {error}
+                </p>
+            )}
+
         </form>
       </div>
   );

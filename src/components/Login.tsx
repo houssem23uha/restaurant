@@ -5,7 +5,6 @@ import { useCustomer } from "./CustomerContext";
 import { useLoginCustomer } from "./hooks/customers/useCustomerMutations";
 import { useLoadPhoto } from "./hooks/customers/useCustomerPhoto";
 
-
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -34,63 +33,63 @@ function Login() {
     setErrorMsg("");
 
     loginMutation.mutate(
-      { login: email, password },
-      {
-        onSuccess: (customer) => {
-          localStorage.setItem("customer", JSON.stringify(customer));
-          setCustomer(customer);
-          setPhotoFilename(customer.photo);
-        },
-        onError: () => {
-          setErrorMsg("Email ou mot de passe invalide.");
-        },
-      }
+        { login: email, password },
+        {
+          onSuccess: (customer) => {
+            localStorage.setItem("customer", JSON.stringify(customer));
+            setCustomer(customer);
+            setPhotoFilename(customer.photo);
+          },
+          onError: () => {
+            setErrorMsg("Email ou mot de passe invalide.");
+          },
+        }
     );
   };
 
   return (
-    <div className={styles.loginContainer}>
-      <form className={styles.loginForm} onSubmit={handleLogin}>
-        <h2>Connexion Client</h2>
-        {errorMsg && <p className={styles.error}>{errorMsg}</p>}
+      <div className={styles.loginContainer}>
+        <form className={styles.loginForm} onSubmit={handleLogin}>
+          <h2>Connexion Client</h2>
+          {errorMsg && <p className={styles.error}>{errorMsg}</p>}
 
-        <label>Email :</label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-
-        <label>Mot de passe :</label>
-        <input
-          type={showPassword ? "text" : "password"}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-
-        <label className={styles.showPasswordLabel}>
+          <label>Email :</label>
           <input
-            type="checkbox"
-            checked={showPassword}
-            onChange={() => setShowPassword((prev) => !prev)}
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
           />
-          <span>Afficher le mot de passe</span>
-        </label>
 
-        <button type="submit" style={{ marginTop: "1rem" }} disabled={loginMutation.isPending}>
-          {loginMutation.isPending ? "Connexion..." : "Se connecter"}
-        </button>
+          <label>Mot de passe :</label>
+          <input
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+          />
 
-        <p style={{ marginTop: "1rem", textAlign: "center" }}>
-          Pas encore de compte ?{" "}
-          <Link to="/register" style={{ color: "var(--primary)" }}>
-            Créer un compte
-          </Link>
-        </p>
-      </form>
-    </div>
+          <label className={styles.showPasswordLabel}>
+            <input
+                type="checkbox"
+                checked={showPassword}
+                onChange={() => setShowPassword((prev) => !prev)}
+            />
+            <span>Afficher le mot de passe</span>
+          </label>
+
+          <button type="submit" style={{ marginTop: "1rem" }} disabled={loginMutation.isPending}>
+            {loginMutation.isPending ? "Connexion..." : "Se connecter"}
+          </button>
+
+          <p style={{ marginTop: "1rem", textAlign: "center" }}>
+            Pas encore de compte ?{" "}
+            <Link to="/register" style={{ color: "var(--primary)" }}>
+              Créer un compte
+            </Link>
+          </p>
+        </form>
+      </div>
   );
 }
 

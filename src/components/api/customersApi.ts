@@ -1,5 +1,14 @@
 import apiClient from "../servicesh/apiClient";
-import type { Customer } from "../models/Customer";
+import type {Customer} from "../types";
+
+export const fetchConnectedCustomer = async () => {
+  const response = await fetch("/customers/me", {
+    credentials: "include", // si tu utilises des cookies
+  });
+  if (!response.ok) throw new Error("Not authenticated");
+  return response.json();
+};
+
 
 export const fetchCustomers = async (): Promise<Customer[]> => {
   const res = await apiClient.get<Customer[]>("/customers");
