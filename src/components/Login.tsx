@@ -1,41 +1,51 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import styles from "./Login.module.scss";
-import { loginCustomer , loadPhoto  } from "./services/customerService";
 import { useCustomer } from "./CustomerContext";
+import { useLoginCustomer } from "./hooks/customers/useCustomerMutations";
+import { useLoadPhoto } from "./hooks/customers/useCustomerPhoto";
+
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const navigate = useNavigate();
+  const [photoFilename, setPhotoFilename] = useState<string | null>(null);
 
- const { setCustomer, setPhoto } = useCustomer();
+  const navigate = useNavigate();
+  const { setCustomer, setPhoto } = useCustomer();
+
+  const loginMutation = useLoginCustomer();
+  const {
+    data: photoBase64,
+    isSuccess: isPhotoLoaded,
+  } = useLoadPhoto(photoFilename || undefined);
+
+  useEffect(() => {
+    if (isPhotoLoaded && photoBase64) {
+      setPhoto(photoBase64);
+      navigate("/");
+    }
+  }, [isPhotoLoaded, photoBase64, setPhoto, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMsg("");
 
-    try {
-      const response = await loginCustomer(email, password);
-      const base64 = await loadPhoto(response.photo); // 'photo' est un string (le nom de fichier)
-
-      // Stocker dans localStorage
-      localStorage.setItem("customer", JSON.stringify(response));
-      // Mettre à jour le contexte
-      setCustomer(response);
-      setPhoto(base64);
-
-      navigate("/");
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        setErrorMsg("Email ou mot de passe invalide.");
-        console.error("Erreur de connexion :", error.message);
-      } else {
-        setErrorMsg("Une erreur inconnue est survenue.");
-        console.error("Erreur inconnue :", error);
+    loginMutation.mutate(
+      { login: email, password },
+      {
+        onSuccess: (customer) => {
+          localStorage.setItem("customer", JSON.stringify(customer));
+          setCustomer(customer);
+          setPhotoFilename(customer.photo);
+        },
+        onError: () => {
+          setErrorMsg("Email ou mot de passe invalide.");
+        },
       }
-    }
+    );
   };
 
   return (
@@ -64,13 +74,13 @@ function Login() {
           <input
             type="checkbox"
             checked={showPassword}
-            onChange={() => setShowPassword(prev => !prev)}
+            onChange={() => setShowPassword((prev) => !prev)}
           />
           <span>Afficher le mot de passe</span>
         </label>
 
-        <button type="submit" style={{ marginTop: "1rem" }}>
-          Se connecter
+        <button type="submit" style={{ marginTop: "1rem" }} disabled={loginMutation.isPending}>
+          {loginMutation.isPending ? "Connexion..." : "Se connecter"}
         </button>
 
         <p style={{ marginTop: "1rem", textAlign: "center" }}>

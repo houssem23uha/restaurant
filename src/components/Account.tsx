@@ -1,16 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { useCustomer } from "./CustomerContext";
-import { updateCustomer, uploadPhoto } from "./services/customerService";
-import type { Customer } from "./models/Customer";
-import styles from "./Register.module.scss"; // ou un fichier dédié Account.module.scss
+import styles from "./Register.module.scss";
+import type { Customer, Address } from "./types/index";
+import { useUpdateCustomer } from "./hooks/customers/useCustomerMutations";
+import {  useUploadPhoto } from "./hooks/customers/useCustomerPhoto";
+
+// Ajout d'un hook fictif pour la mise à jour d'adresse
+import { useUpdateAddress } from "./hooks/addresses/useAddressMutations";
 
 export default function Account() {
   const { customer, setCustomer } = useCustomer();
+  const updateCustomerMutation = useUpdateCustomer();
+  const uploadPhotoMutation = useUploadPhoto();
+  const updateAddressMutation = useUpdateAddress();
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState("");
   const [message, setMessage] = useState("");
+  const [editingAddress, setEditingAddress] = useState(false);
 
   const [formData, setFormData] = useState<Partial<Customer>>({
     firstname: "",
@@ -18,67 +26,70 @@ export default function Account() {
     phone: "",
     password: "",
     photo: "",
-    addresses: [
-      {
-        street: "",
-        city: "",
-        postalCode: "",
-        country: "",
-      },
-    ],
   });
 
-  // Sync formData + photoPreview with customer
+  const [addressData, setAddressData] = useState<Address>({
+    id: 0,
+    street: "",
+    city: "",
+    postalCode: "",
+    country: "",
+    version: 0, // Assurez-vous d'initialiser la version si nécessaire
+  });
+
   useEffect(() => {
-  if (customer) {
-    setFormData({
-      firstname: customer.firstname || "",
-      lastname: customer.lastname || "",
-      phone: customer.phone || "",
-      password: customer.password || "",
-      photo: customer.photo || "",
-      addresses: [
-        {
-          street: customer.addresses?.[0]?.street || "",
-          city: customer.addresses?.[0]?.city || "",
-          postalCode: customer.addresses?.[0]?.postalCode || "",
-          country: customer.addresses?.[0]?.country || "",
-        },
-      ],
-    });
+    if (customer) {
+      setFormData({
+        firstname: customer.firstname,
+        lastname: customer.lastname,
+        phone: customer.phone,
+        password: customer.password,
+        photo: customer.photo,
+      });
+      setPhotoPreview(customer.photo || null);
 
-    // Ici on utilise la photo déjà chargée dans le contexte, supposée base64 ou dataURL
-    setPhotoPreview(customer.photo || null);
+      const addr = customer.addresses?.[0];
+      setAddressData(
+        addr || {
+          id: 0,
+          street: "",
+          city: "",
+          postalCode: "",
+          country: "",
+        }
+      );
 
-    setSelectedFile(null);
-    setErrorMsg("");
-    setMessage("");
-  }
-}, [customer]);
+      setSelectedFile(null);
+      setErrorMsg("");
+      setMessage("");
+      setEditingAddress(false);
+
+
+      console.log("Customer loaded:", customer);
+      console.log("Address loaded:", addr);
+    }
+  }, [customer]);
 
   if (!customer) return <p>Chargement du compte...</p>;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, files } = e.target;
-
     if (name === "photo" && files && files.length > 0) {
       const file = files[0];
       setSelectedFile(file);
       setPhotoPreview(URL.createObjectURL(file));
-    } else if (name.startsWith("address.")) {
-      const field = name.split(".")[1] as keyof Customer["addresses"][0];
-      setFormData((prev) => {
-        const updatedAddress = {
-          ...(prev.addresses?.[0] || {}),
-          [field]: value,
-        };
-        return { ...prev, addresses: [updatedAddress] };
-      });
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
 
+  // Gère les changements sur le formulaire d'adresse
+  const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setAddressData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // Soumission du formulaire principal (sans adresse)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg("");
@@ -87,16 +98,14 @@ export default function Account() {
     try {
       let photoFileName = formData.photo;
 
-      if (selectedFile && customer.firstname) {
-        const fileExt = selectedFile.name.split(".").pop();
-        const newFileName = `${customer.firstname.toLowerCase()}.${fileExt}`;
-
-        await uploadPhoto(selectedFile, newFileName);
-
+      if (selectedFile && customer.login) {
+        const ext = selectedFile.name.split(".").pop();
+        const newFileName = `${customer.login}.${ext}`;
+        await uploadPhotoMutation.mutateAsync({ file: selectedFile, fileName: newFileName });
         photoFileName = newFileName;
       }
 
-      // Compose l'objet Customer complet pour la mise à jour
+      // Mise à jour du client en envoyant juste l'id de l'adresse existante
       const updatedCustomer: Customer = {
         ...customer,
         firstname: formData.firstname || "",
@@ -104,28 +113,52 @@ export default function Account() {
         phone: formData.phone || "",
         password: formData.password || "",
         photo: photoFileName || "",
-        addresses: [
-          {
-            id: customer.addresses?.[0]?.id,
-            street: formData.addresses?.[0]?.street || "",
-            city: formData.addresses?.[0]?.city || "",
-            postalCode: formData.addresses?.[0]?.postalCode || "",
-            country: formData.addresses?.[0]?.country || "",
-          },
-        ],
+        addresses: [addressData], //pas juste l'id mais tout
       };
-      console.log("updated :", updatedCustomer);
-
-      const saved = await updateCustomer(customer.id, updatedCustomer);
+      console.log("old Customer",customer);
+      console.log("updated Customer",updatedCustomer);
+      const saved = await updateCustomerMutation.mutateAsync(updatedCustomer);
+      console.log("saved Customer",saved);
       setCustomer(saved);
-      console.log("saved :", saved);
       localStorage.setItem("customer", JSON.stringify(saved));
       setMessage("Profil mis à jour avec succès !");
-    } catch (error) {
-      console.error("Erreur lors de la mise à jour :", error);
-      setErrorMsg("Erreur lors de la mise à jour du profil.");
+    } catch (err) {
+      console.error("Erreur :", err);
+      setErrorMsg("Échec de la mise à jour du profil.");
     }
   };
+
+  // Soumission du formulaire adresse (uniquement adresse)
+  const handleAddressSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMsg("");
+    setMessage("");
+
+    try {
+      if (!addressData.id) {
+        setErrorMsg("Adresse non valide");
+        return;
+      }
+
+      const updatedAddr = await updateAddressMutation.mutateAsync(addressData);
+      setAddressData(updatedAddr);
+
+      // Optionnel : si l'adresse mise à jour est dans le client, on peut mettre à jour localement
+      setCustomer((prev) => prev ? { ...prev, addresses: [updatedAddr] } : null);
+      localStorage.setItem("customer", JSON.stringify({ ...customer, addresses: [updatedAddr] }));
+
+      setMessage("Adresse mise à jour !");
+      setEditingAddress(false);
+    } catch (err) {
+      console.error(err);
+      setErrorMsg("Erreur lors de la mise à jour de l'adresse.");
+    }
+  };
+
+  const isLoading =
+    updateCustomerMutation.isPending ||
+    uploadPhotoMutation.isPending ||
+    updateAddressMutation.isPending;
 
   return (
     <div className={styles.createAccountContainer}>
@@ -148,6 +181,7 @@ export default function Account() {
           name="photo"
           accept="image/*"
           onChange={handleChange}
+          disabled={isLoading}
         />
 
         <div className={styles.fieldsGrid}>
@@ -158,6 +192,7 @@ export default function Account() {
               value={formData.firstname || ""}
               onChange={handleChange}
               required
+              disabled={isLoading}
             />
           </label>
 
@@ -168,6 +203,7 @@ export default function Account() {
               value={formData.lastname || ""}
               onChange={handleChange}
               required
+              disabled={isLoading}
             />
           </label>
 
@@ -178,6 +214,7 @@ export default function Account() {
               value={formData.phone || ""}
               onChange={handleChange}
               required
+              disabled={isLoading}
             />
           </label>
 
@@ -189,55 +226,97 @@ export default function Account() {
               value={formData.password || ""}
               onChange={handleChange}
               required
+              disabled={isLoading}
             />
           </label>
         </div>
 
-        <fieldset>
-          <legend>Adresse</legend>
+        <section style={{ marginTop: "1rem" }}>
+          <h3>Adresse</h3>
 
-          <label>
-            Rue :
-            <input
-              name="address.street"
-              value={formData.addresses?.[0]?.street || ""}
-              onChange={handleChange}
-              required
-            />
-          </label>
+          {!editingAddress ? (
+            <>
+              <p>
+                {addressData.street
+                  ? `${addressData.street}, ${addressData.city}, ${addressData.postalCode}, ${addressData.country}`
+                  : "Aucune adresse enregistrée."}
+              </p>
+              <button
+                type="button"
+                onClick={() => setEditingAddress(true)}
+                disabled={isLoading}
+              >
+                Modifier mon adresse
+              </button>
+            </>
+          ) : (
+            <form onSubmit={handleAddressSubmit} style={{ marginTop: "1rem" }}>
+              <label>
+                Rue :
+                <input
+                  name="street"
+                  value={addressData.street}
+                  onChange={handleAddressChange}
+                  required
+                  disabled={isLoading}
+                />
+              </label>
+              <label>
+                Ville :
+                <input
+                  name="city"
+                  value={addressData.city}
+                  onChange={handleAddressChange}
+                  required
+                  disabled={isLoading}
+                />
+              </label>
+              <label>
+                Code postal :
+                <input
+                  name="postalCode"
+                  value={addressData.postalCode}
+                  onChange={handleAddressChange}
+                  required
+                  disabled={isLoading}
+                />
+              </label>
+              <label>
+                Pays :
+                <input
+                  name="country"
+                  value={addressData.country}
+                  onChange={handleAddressChange}
+                  required
+                  disabled={isLoading}
+                />
+              </label>
 
-          <label>
-            Ville :
-            <input
-              name="address.city"
-              value={formData.addresses?.[0]?.city || ""}
-              onChange={handleChange}
-              required
-            />
-          </label>
+              <div style={{ marginTop: "0.5rem" }}>
+                <button type="submit" disabled={isLoading}>
+                  Sauvegarder l'adresse
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setEditingAddress(false)}
+                  disabled={isLoading}
+                  style={{ marginLeft: "1rem" }}
+                >
+                  Annuler
+                </button>
+              </div>
+            </form>
+          )}
+        </section>
 
-          <label>
-            Code postal :
-            <input
-              name="address.postalCode"
-              value={formData.addresses?.[0]?.postalCode || ""}
-              onChange={handleChange}
-              required
-            />
-          </label>
-
-          <label>
-            Pays :
-            <input
-              name="address.country"
-              value={formData.addresses?.[0]?.country || ""}
-              onChange={handleChange}
-              required
-            />
-          </label>
-        </fieldset>
-
-        <button type="submit">Mettre à jour</button>
+        <button className="btn btn-reverse-primary" 
+          
+          
+          disabled={isLoading}
+          style={{ marginTop: "2rem" }}
+        >
+          {isLoading ? "Mise à jour..." : "Mettre à jour"}
+        </button>
       </form>
     </div>
   );

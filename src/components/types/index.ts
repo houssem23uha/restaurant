@@ -36,6 +36,7 @@ export interface Address {
   // ajouter d'autres champs si tu en as dans ton modèle Java
   // Relation vers Customer par id ou objet selon besoin côté frontend
   customerId?: number; // ou customer?: Customer si tu veux l'objet complet
+  version: number;
 }
 
 export interface Authentification {

@@ -74,20 +74,7 @@ fieldset {
   }
 }
 
-button[type="submit"] {
-  margin-top: 1rem;
-  padding: 0.8rem 2rem;
-  border: none;
-  background-color: #007bff;
-  color: white;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  cursor: pointer;
 
-  &:hover {
-    background-color: #0056b3;
-  }
-}
 
 .error {
   color: red;
