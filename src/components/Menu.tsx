@@ -1,28 +1,28 @@
-import Breadcrumb from "./Breadcrumb";
-import { useLocation } from "react-router-dom";
-import styles from "./Menu.module.scss";
+import { useItems } from "./hooks/items/useItems";
+import type { Item } from "./types";
+/* import styles from "./Menu.module.scss";
 import Recipe from "./recipe";
-import SliderTabs from "./SliderTabs";
-/* import { useEffect, useRef, useState } from "react";
-
-const tabsData = ["Entree", "Plat", "Dessert", "Boisson"]; */
+import SliderTabs from "./SliderTabs"; */
 
 function Menu() {
-  const location = useLocation();
-  /*
-   */
+  const { data: items, isLoading, error } = useItems();
+
+  if (isLoading) return <p>Chargement...</p>;
+  if (error instanceof Error) return <p>Erreur : {error.message}</p>;
+  console.log(items);
+
   return (
     <>
-      <div className={`${styles.MenuContent}`}>
-        <div className="row">
-          <Breadcrumb location={location} />
-        </div>
+      <ol>
+        {items?.map((item: Item) => (
+          <li>{item.name}</li>
+        ))}
+      </ol>
+      {/*       <div className={`${styles.MenuContent}`}>
         <div
-          className={`${styles.MenuTitle} d-flex justify-content-center mb-3`}
+          className={`${styles.MenuTitle} d-flex justify-content-center mb-3 page-title`}
         >
-          <i className="fa-solid fa-utensils"></i>
-          <span>Menu</span>
-          <i className="fa-solid fa-utensils"></i>
+          <h1>Menu</h1>
         </div>
 
         <div className="row d-flex flex-column gap-3 mb-3">
@@ -30,6 +30,7 @@ function Menu() {
         </div>
 
         <div className="grid my-5">
+
           <Recipe vote={false} />
           <Recipe vote={false} />
           <Recipe vote={false} />
@@ -43,7 +44,7 @@ function Menu() {
           <Recipe vote={false} />
           <Recipe vote={false} />
         </div>
-      </div>
+      </div> */}
     </>
   );
 }
