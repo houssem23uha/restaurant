@@ -48,3 +48,35 @@ img {
   grid-auto-columns: repeat(3, 20rem);
   gap: 2rem;
 }
+
+.page-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2.5rem 1rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  background: linear-gradient(135deg, #f9f4f0 0%, #fefefe 50%, #f9f4f0 100%);
+  border-bottom: 1px solid #e7ddd6;
+
+  h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    color: #5a4b42;
+    position: relative;
+    display: inline-block;
+    font-family: "Playfair Display", serif;
+
+    &::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -10px;
+      transform: translateX(-50%);
+      width: 60%;
+      height: 3px;
+      background-color: #d9a273; // couleur chaude pour souligner
+      border-radius: 2px;
+    }
+  }
+}

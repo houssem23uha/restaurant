@@ -24,4 +24,18 @@
       }
     }
   }
+
+  form {
+    display: inline;
+    font-size: 1.2rem;
+    color: var(--text-color);
+    border: 0.1rem solid var(--gray-2);
+    border-radius: 2rem;
+    input {
+      padding: 0.5rem 1rem;
+      border: none;
+      outline: none;
+      background-color: transparent;
+    }
+  }
 }
