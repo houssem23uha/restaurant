@@ -1,0 +1,142 @@
+
+@import "../assets/styles/index.scss";
+
+
+
+.loginContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  background-color: white;
+}
+
+.loginForm {
+  width: 350px;
+  padding: 2rem;
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.loginForm h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: var(--primary);
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+}
+
+.loginForm label {
+  @extend .label;
+  margin-top: 1rem;
+  font-weight: 600;
+}
+
+.loginForm input {
+  width: 100%;
+  padding: 0.6rem;
+  margin-top: 0.3rem;
+  border: 1px solid var(--gray-2);
+  border-radius: 0.4rem;
+  font-size: 1rem;
+  &:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 5px var(--primary);
+  }
+}
+
+.loginForm button {
+  @extend .btn;
+  @extend .btn-primary;
+  width: 100%;
+  margin-top: 1.5rem;
+  font-weight: bold;
+}
+
+.loginForm .error {
+  color: var(--danger);
+  margin-top: 1rem;
+  text-align: center;
+  font-weight: 600;
+}
+.loginContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  background-color: transparent;
+}
+
+.loginForm {
+  width: 350px;
+  padding: 2rem;
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.loginForm h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: var(--primary);
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+}
+
+.loginForm label {
+  @extend .label;
+  margin-top: 1rem;
+  font-weight: 600;
+}
+
+.loginForm input {
+  width: 100%;
+  padding: 0.6rem;
+  margin-top: 0.3rem;
+  border: 1px solid var(--gray-2);
+  border-radius: 0.4rem;
+  font-size: 1rem;
+  &:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 5px var(--primary);
+  }
+}
+
+.loginForm button {
+  @extend .btn;
+  @extend .btn-primary;
+  width: 100%;
+  margin-top: 1.5rem;
+  font-weight: bold;
+}
+
+.loginForm .error {
+  color: var(--danger);
+  margin-top: 1rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+input[type="checkbox"] {
+  width: auto;     /* taille native */
+  flex-grow: 0;    /* pas d’expansion */
+  margin-right: 0.5rem; /* ton espacement */
+}
+.showPasswordLabel {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  input[type="checkbox"] {
+    width: auto;
+    flex-grow: 0;
+    margin-right: 0.5rem;
+  }
+
+  span {
+    flex-grow: 1;
+  }
+}
