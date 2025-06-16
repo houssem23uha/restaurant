@@ -1,7 +1,7 @@
 import styles from './Carte.module.scss';
-import React, { useEffect, useState } from "react";
-import type { Item } from "./models/Item";
-import { getItems } from "./services/itemService";
+import { useEffect, useState } from "react";
+import type {Item} from "./types";
+import {fetchItems} from "./api/itemsApi.ts";
 
 
 
@@ -18,7 +18,7 @@ const [loading, setLoading] = useState(true);
 const [error, setError] = useState<string>("");
 
    useEffect(() => {
-      getItems()
+      fetchItems()
         .then(data => setItems(data))
         .catch(e => setError(e.message))
         .finally(() => setLoading(false));
