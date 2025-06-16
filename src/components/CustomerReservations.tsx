@@ -1,14 +1,16 @@
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
+
 import {
-    getReservations,
-    deleteReservation,
-    updateReservation,
-    getReservationById,
-} from "../../services/reservationService";
+    useDeleteReservation,
+    useUpdateReservation,
+} from "./hooks/reservation/useReservationMutations.ts";
+import {useReservations} from "./hooks/reservation/useReservations.ts";
+
+
 import styles from "./CustomerReservations.module.scss";
-import type { Reservation } from "../../models/Reservation";
+import type { Reservation } from "./types";
 import { FaTrashAlt, FaEdit } from "react-icons/fa";
 
 type EditingState = {
@@ -17,58 +19,68 @@ type EditingState = {
 };
 
 const CustomerReservations: React.FC = () => {
-    const [groupedReservations, setGroupedReservations] = useState<
-        Record<string, Reservation[]>
-    >({});
-    const [error, setError] = useState<string | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
+    const { data: allReservations = [], isPending, isError, error } = useReservations();
+    const updateMutation = useUpdateReservation();
+    const deleteMutation = useDeleteReservation();
+
+    const [groupedReservations, setGroupedReservations] = useState<Record<string, Reservation[]>>({});
     const [editing, setEditing] = useState<EditingState | null>(null);
+    const [localError, setLocalError] = useState<string | null>(null);
 
+    // Grouper les réservations par client à chaque changement de données
     useEffect(() => {
-        const fetchReservations = async () => {
-            try {
-                const allReservations = await getReservations();
+        const grouped: Record<string, Reservation[]> = {};
 
-                const grouped: Record<string, Reservation[]> = {};
-                allReservations.forEach((res) => {
-                    const firstname = res.customer?.firstname ?? "Inconnu";
-                    const lastname = res.customer?.lastname ?? "Client";
-                    const key = `${firstname} ${lastname}`;
-                    if (!grouped[key]) grouped[key] = [];
-                    grouped[key].push(res);
-                });
+        allReservations.forEach((res) => {
+            const firstname = res.customer?.firstname ?? "Inconnu";
+            const lastname = res.customer?.lastname ?? "Client";
+            const key = `${firstname} ${lastname}`;
+            if (!grouped[key]) grouped[key] = [];
+            grouped[key].push(res);
+        });
 
-                for (const key in grouped) {
-                    grouped[key].sort(
-                        (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-                    );
-                }
-
-                setGroupedReservations(grouped);
-            } catch (err) {
-                console.error("Erreur lors du fetch des réservations :", err);
-                setError("Erreur lors du chargement des réservations.");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchReservations();
-    }, []);
-
-    const handleDelete = async (id: number, customerKey: string) => {
-        try {
-            await deleteReservation(id);
-            setGroupedReservations((prev) => {
-                const updated = { ...prev };
-                updated[customerKey] = updated[customerKey].filter((res) => res.id !== id);
-                return updated;
-            });
-        } catch {
-            setError("Erreur lors de la suppression de la réservation.");
+        for (const key in grouped) {
+            grouped[key].sort(
+                (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+            );
         }
+
+        setGroupedReservations(grouped);
+    }, [allReservations]);
+
+    // Supprimer une réservation
+    const handleDelete = (id: number) => {
+        setLocalError(null);
+        deleteMutation.mutate(id, {
+            onError: () => {
+                setLocalError("Erreur lors de la suppression de la réservation.");
+            },
+        });
     };
 
+    // Modifier une réservation
+    const handleUpdate = (_id: number, updatedFields: Partial<Reservation>) => {
+        setLocalError(null);
+
+        // Récupérer la réservation complète dans le state d’édition
+        if (!editing) return;
+
+        const updatedReservation: Reservation = {
+            ...editing.reservation,
+            ...updatedFields,
+        };
+
+        updateMutation.mutate(updatedReservation, {
+            onSuccess: () => {
+                setEditing(null);
+            },
+            onError: () => {
+                setLocalError("Erreur lors de la mise à jour de la réservation.");
+            },
+        });
+    };
+
+    // Gestion des champs dans le formulaire d’édition
     const handleEditChange = (field: keyof Reservation, value: any) => {
         if (!editing) return;
 
@@ -81,7 +93,7 @@ const CustomerReservations: React.FC = () => {
             if (num < 1) return;
             newValue = num;
         } else if (field === "slot") {
-            newValue = value as Reservation["slot"]; // Cast explicite en Slot
+            newValue = value as Reservation["slot"];
         }
 
         setEditing({
@@ -93,37 +105,7 @@ const CustomerReservations: React.FC = () => {
         });
     };
 
-    async function handleUpdate(id: number, updatedFields: Partial<Reservation>) {
-        try {
-            const currentReservation = await getReservationById(id);
-
-            const reservationToUpdate: Reservation = {
-                ...currentReservation,
-                ...updatedFields,
-                slot: updatedFields.slot || currentReservation.slot,
-            };
-
-            const updated = await updateReservation(reservationToUpdate);
-            console.log("Réservation mise à jour :", updated);
-
-            // Optionnel : mettre à jour localement groupedReservations pour refléter la modif
-            setGroupedReservations((prev) => {
-                const newGrouped = { ...prev };
-                const customerKey = `${updated.customer.firstname} ${updated.customer.lastname}`;
-                if (!newGrouped[customerKey]) newGrouped[customerKey] = [];
-                const index = newGrouped[customerKey].findIndex((r) => r.id === updated.id);
-                if (index !== -1) {
-                    newGrouped[customerKey][index] = updated;
-                }
-                return newGrouped;
-            });
-
-        } catch (error) {
-            console.error("Update reservation error:", error);
-            setError("Erreur lors de la mise à jour de la réservation.");
-        }
-    }
-
+    // Vérifie si la réservation est passée
     const isPast = (res: Reservation) => {
         const now = new Date();
         const resDate = new Date(res.date);
@@ -144,10 +126,12 @@ const CustomerReservations: React.FC = () => {
         return false;
     };
 
+    if (isPending) return <p>Chargement des réservations...</p>;
+    if (isError) return <p className={styles.error}>Erreur : {(error as Error)?.message || "Chargement impossible"}</p>;
+
     return (
         <div className={styles.container}>
-            {loading && <p>Chargement des réservations...</p>}
-            {error && <p className={styles.error}>{error}</p>}
+            {localError && <p className={styles.error}>{localError}</p>}
 
             {Object.entries(groupedReservations).map(([customerName, reservations]) => (
                 <section key={customerName} className={styles.customerSection}>
@@ -164,9 +148,7 @@ const CustomerReservations: React.FC = () => {
                         {reservations.map((res) => (
                             <tr key={res.id} className={styles.reservationRow}>
                                 <td>
-                                    <strong>
-                                        {format(new Date(res.date), "dd MMM yyyy", { locale: fr })}
-                                    </strong>
+                                    <strong>{format(new Date(res.date), "dd MMM yyyy", { locale: fr })}</strong>
                                     {" • "}
                                     {res.slot}
                                     {" • "}
@@ -175,8 +157,9 @@ const CustomerReservations: React.FC = () => {
                                 <td>
                                     {!isPast(res) && (
                                         <button
-                                            onClick={() => handleDelete(res.id!, customerName)}
+                                            onClick={() => handleDelete(res.id!)}
                                             aria-label="Supprimer"
+                                            disabled={deleteMutation.isPending}
                                         >
                                             <FaTrashAlt />
                                         </button>
@@ -185,9 +168,7 @@ const CustomerReservations: React.FC = () => {
                                 <td>
                                     {!isPast(res) && (
                                         <button
-                                            onClick={() =>
-                                                setEditing({ reservation: { ...res }, customerKey: customerName })
-                                            }
+                                            onClick={() => setEditing({ reservation: { ...res }, customerKey: customerName })}
                                             aria-label="Modifier"
                                         >
                                             <FaEdit />
@@ -210,7 +191,6 @@ const CustomerReservations: React.FC = () => {
                                                     slot: reservation.slot,
                                                     nbPersons: reservation.nbPersons,
                                                 });
-                                                setEditing(null);
                                             }
                                         }}
                                         style={{
@@ -271,6 +251,7 @@ const CustomerReservations: React.FC = () => {
                                                 borderRadius: 6,
                                                 color: "#2a2a2a",
                                             }}
+                                            disabled={updateMutation.isPending}
                                         >
                                             Valider
                                         </button>
@@ -287,6 +268,7 @@ const CustomerReservations: React.FC = () => {
                                                 borderRadius: 6,
                                                 color: "#6b1b1b",
                                             }}
+                                            disabled={updateMutation.isPending}
                                         >
                                             Annuler
                                         </button>

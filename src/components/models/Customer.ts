@@ -3,7 +3,7 @@ import type { Address } from "./Address";
 import type { Authentification } from "./Authentification";
 import type { Item } from "./Item";
 import type { Order } from "./Order";
-import type { Reservation } from "./Reservation";
+import type {Reservation} from "../types";
 
 
 export interface Customer extends Authentification {

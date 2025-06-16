@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import styles from "./ReservationForm.module.scss";
-import InlineCalendar from "./InlineCalendar";
+import InlineCalendar from "./InlineCalendar.tsx";
 
-import { createReservation } from "./services/reservationService";
 import type { Slot } from "./models/enums";
-import type { Reservation } from "./models/Reservation";
+import type { Reservation } from "./types";
 import type { Customer } from "./models/Customer";
+import {useCreateReservation} from "./hooks/reservation/useReservationMutations.ts";
 
 // Client factice
 const dummyCustomer: Customer = {
@@ -42,6 +42,8 @@ const ReservationForm = () => {
   const [error, setError] = useState<string>("");
   const [successMessage, setSuccessMessage] = useState<string>("");
 
+  const createMutation = useCreateReservation();
+
   useEffect(() => {
     const today = new Date();
     const formatted = today.toISOString().split("T")[0];
@@ -77,24 +79,26 @@ const ReservationForm = () => {
       version: 0,
     };
 
-    try {
-      await createReservation(newReservation as Reservation);
-      setSuccessMessage(
-          `Réservation confirmée pour ${covers} personnes le ${new Date(date).toLocaleDateString(
-              "fr-FR",
-              { weekday: "long", day: "numeric", month: "long" }
-          )} (${slotToLabel(selectedTime)})`
-      );
-      setCovers(2);
-      setSelectedTime("");
-      setDate(new Date().toISOString().split("T")[0]);
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("Erreur lors de la création de la réservation.");
-      }
-    }
+    createMutation.mutate(newReservation as Reservation, {
+      onSuccess: () => {
+        setSuccessMessage(
+            `Réservation confirmée pour ${covers} personnes le ${new Date(date).toLocaleDateString(
+                "fr-FR",
+                { weekday: "long", day: "numeric", month: "long" }
+            )} (${slotToLabel(selectedTime)})`
+        );
+        setCovers(2);
+        setSelectedTime("");
+        setDate(new Date().toISOString().split("T")[0]);
+      },
+      onError: (err) => {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("Erreur lors de la création de la réservation.");
+        }
+      },
+    });
   };
 
   return (
@@ -225,8 +229,8 @@ const ReservationForm = () => {
             </ul>
           </div>
 
-          <button type="submit" disabled={!selectedTime} className={styles.submitButton}>
-            Réserver
+          <button type="submit" disabled={!selectedTime || createMutation.isPending} className={styles.submitButton}>
+            {createMutation.isPending ? "Envoi..." : "Réserver"}
           </button>
 
           {successMessage && (

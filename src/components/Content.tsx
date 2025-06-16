@@ -10,6 +10,8 @@ import ItemsList from "./testApi/ItemsList";
 import ItemDetails from "./testApi/ItemDetails";
 import ItemForm from "./testApi/ItemForm";
 import ItemFormUpdate from "./testApi/ItemFormUpdate";
+import ReservationComponent from "./ReservationComponent.tsx";
+import CustomerReservations from "./CustomerReservations.tsx";
 
 const queryClient = new QueryClient();
 
@@ -30,7 +32,8 @@ function Content() {
               <Route path="/menu/items" element={<HomeContent />} />
               <Route path="/orders" element={<HomeContent />} />
               <Route path="/orders/history" element={<HomeContent />} />
-              <Route path="/reservation" element={<HomeContent />} />
+              <Route path="/reservation" element={<ReservationComponent />} />
+              <Route path="/customer_reservations" element={<CustomerReservations />} />
               <Route path="/delivery-info" element={<HomeContent />} />
               <Route path="/account" element={<HomeContent />} />
               <Route path="/account/favoris" element={<FavoriteDishes />} />
