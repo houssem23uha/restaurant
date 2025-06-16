@@ -46,7 +46,7 @@ function Header() {
             <span className="separator"></span>
 
             <li>
-              <a href="/account/orders">Commandes</a>
+              <a href="/orders">Commandes</a>
             </li>
           </ul>
         </div>

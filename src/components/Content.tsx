@@ -10,6 +10,7 @@ import ItemsList from "./testApi/ItemsList";
 import ItemDetails from "./testApi/ItemDetails";
 import ItemForm from "./testApi/ItemForm";
 import ItemFormUpdate from "./testApi/ItemFormUpdate";
+import OrderList from "./OrderList";
 
 const queryClient = new QueryClient();
 
@@ -28,7 +29,7 @@ function Content() {
               <Route path="/" element={<HomeContent />} />
               <Route path="/menu" element={<Menu />} />
               <Route path="/menu/items" element={<HomeContent />} />
-              <Route path="/orders" element={<HomeContent />} />
+              <Route path="/orders" element={<OrderList />} />
               <Route path="/orders/history" element={<HomeContent />} />
               <Route path="/reservation" element={<HomeContent />} />
               <Route path="/delivery-info" element={<HomeContent />} />
