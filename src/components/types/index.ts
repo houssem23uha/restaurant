@@ -1,4 +1,5 @@
-export type Category = "FOOD" | "DRINK" | "DESSERT"; // compléter si besoin
+export type Category = "STARTER" | "MAIN" | "DRINK" | "DESSERT"; // compléter si besoin
+export const CATEGORIES: Category[] = ["STARTER", "MAIN", "DRINK", "DESSERT"];
 
 export type Status = "PENDING" | "VALIDATED" | "CANCELLED"; // idem
 
