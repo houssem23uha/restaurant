@@ -1,9 +1,10 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import styles from "./Header.module.scss";
 import MenuModal from "./MenuModal";
 import GenericModal from "./GenericModal";
 import Basket from "./Basket";
 import { useCustomerswithOrdersLines } from "./hooks/customers/useCustomers";
+import HeaderBar from "./HeaderBar.tsx";
 /* import { useCustomerswithOrdersLines } from "./hooks/customers/useCustomers";
  */ /* import MenuModal from "./MenuModal";
  */
@@ -14,7 +15,6 @@ import { useCustomerswithOrdersLines } from "./hooks/customers/useCustomers";
   return order || null;
 }
  */
-import HeaderBarHome from "./HeaderBarHome";
 
 function Header() {
 
@@ -109,6 +109,7 @@ function Header() {
           </ul>
         </div>
       </div>
+    </div>
     </div>
   );
 }

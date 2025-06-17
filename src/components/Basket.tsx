@@ -7,7 +7,7 @@ import GenericModal from "./GenericModal";
 import SearchItem from "./SearchItem";
 
 function getFirstIncompleteOrder(customer) {
-  const order = customer.orders.find((o) => o.status === "INCOMPLETE");
+  const order = customer.orders.find((o) => o.status === "PENDING");
   return order || null;
 }
 

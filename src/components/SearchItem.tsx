@@ -12,7 +12,7 @@ function SearchItem() {
   const [activeIndex, setActiveIndex] = useState(0);
   const tabsRef = useRef([]);
   const sliderRef = useRef(null);
-  const [totalPrice, setTotalPrice] = useState(0);
+  //const [totalPrice, setTotalPrice] = useState(0);
 
   useEffect(() => {
     const activeTab = tabsRef.current[activeIndex];

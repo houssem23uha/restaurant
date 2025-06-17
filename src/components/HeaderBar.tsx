@@ -30,7 +30,7 @@ function HeaderBar() {
                 title="Mon panier"
                 placement="start"
             >
-              <Basket />
+              <Basket client={undefined} />
             </GenericModal>
         )}
         <button className=" btn btn-reverse-primary d-flex dlex-row align-items-center gap-2">
