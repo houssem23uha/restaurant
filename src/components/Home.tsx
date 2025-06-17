@@ -1,7 +1,7 @@
-//import ReactPlayer from 'react-player';
+import ReactPlayer from 'react-player';
 import styles from "./Home.module.scss";
 import logo from "/src/assets/images/logo.png";
-//import video from "/src/assets/videos/accueil.mp4";
+import video from "/src/assets/videos/accueil.mp4";
 
 function Home(){
     return(
@@ -17,7 +17,7 @@ function Home(){
         />
       </div>
 
-      {/* Droite : vidéo
+      
       <div className={styles.videoWrapper}>
         <ReactPlayer
           url={video}// vidéo dans /public/videos/accueil.mp4
@@ -30,7 +30,7 @@ function Home(){
           controls={false}
         />
       </div>
-      */}
+      
     </div>
     
     )
