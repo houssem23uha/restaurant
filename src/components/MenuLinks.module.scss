@@ -1,23 +1,19 @@
 .modal {
-  background-color: #ffffff; // blanc solide
+  background-color: #ffffff;
   padding: 2rem;
-  border-radius: 0.8rem;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
+  border-radius: 1rem;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.25);
   animation: fadeInSlide 0.4s ease forwards;
   z-index: 1001;
   position: fixed;
   top: 6rem;
   left: 0;
-  height: auto ; //calc(100vh - 12rem);
-  width: 400px;
+  width: 350px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  gap: 1.5rem;
 }
 
-
-
-// fond foncé semi-transparent derrière
 .backdrop {
   position: fixed;
   top: 0;
@@ -28,41 +24,42 @@
   z-index: 1000;
 }
 
-.menu-links-container {
+.menuLinksContainer {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
   font-family: "Montserrat", sans-serif;
-  font-size: 1.8rem;
+  font-size: 1.6rem;
 }
 
-.label-link {
-  border-radius: 0.5rem;
+.labelLink {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
   background-color: #5c3a00;
   color: #ffffff;
-  font-family: "Montserrat", sans-serif;
   font-weight: 600;
-  font-size: 1.4rem;
-  padding: 0.8rem 1.5rem;
-  text-align: center;
+  font-size: 1.3rem;
+  padding: 0.9rem 1.2rem;
+  border-radius: 0.6rem;
   text-decoration: none;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
-  cursor: pointer;
-  user-select: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+  i {
+    font-size: 1.5rem;
+    width: 1.8rem;
+    text-align: center;
+  }
 
   &:hover,
   &:focus {
     background-color: #ffffff;
     color: #5c3a00;
     box-shadow:
-      0 0 12px #5c3a00,
-      0 0 24px #5c3a00;
+            0 0 12px #5c3a00,
+            0 0 24px #5c3a00;
     transform: scale(1.05);
-    outline: none;
   }
 }
 

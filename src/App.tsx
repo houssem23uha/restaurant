@@ -1,4 +1,3 @@
-import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Content from "./components/Content";
 import Accueil from "./components/Accueil";
@@ -37,7 +36,7 @@ function AppContent() {
 
     return (
         <>
-            <Header />
+            <HeaderHome />
             <div className={`${styles.appContainer} d-flex flex flex-column`}>
                 <Content />
             </div>
