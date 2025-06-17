@@ -1,0 +1,86 @@
+.container {
+  padding: 40px 24px;
+  background-color: #db9648;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  font-family: "Inter", sans-serif;
+  color: #2a2a2a;
+  max-width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.error {
+  color: #b00020;
+  background-color: #ffe5e5;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.customerSection {
+  margin-bottom: 40px;
+
+  h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    text-align: left;
+    border-bottom: 2px solid #c07d30;
+    padding-bottom: 8px;
+  }
+}
+
+.reservationTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+
+  th,
+  td {
+    padding: 14px 18px;
+    text-align: left;
+    border-bottom: 1px solid #c07d30;
+  }
+
+  th {
+    background-color: #fbe3c1;
+    font-weight: 700;
+    font-size: 1rem;
+    color: #4b3a01;
+  }
+
+  td {
+    font-size: 1rem;
+    color: #2a2a2a;
+  }
+
+  button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 6px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+
+    svg {
+      font-size: 1.2rem;
+      color: #4b3a01;
+      background: none !important;
+    }
+
+    &:hover {
+      background-color: #f5b800;
+    }
+
+    &:focus-visible {
+      outline: 2px solid #ffcb05;
+      outline-offset: 2px;
+    }
+  }
+}

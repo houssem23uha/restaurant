@@ -16,20 +16,20 @@ const ItemsList: React.FC = () => {
   };
 
   return (
-    <ul>
-      {items?.map((item) => (
-        <li key={item.ref}>
-          {item.name}
-          <button
-            onClick={() => handleDelete(item.ref)}
-            disabled={deleteMutation.isPending}
-          >
-            Supprimer
-          </button>
-          {/* Tu peux aussi ajouter un bouton "Modifier" ici */}
-        </li>
-      ))}
-    </ul>
+      <ul>
+        {items?.map((item) => (
+            <li key={item.ref}>
+              {item.name}
+              <button
+                  onClick={() => handleDelete(item.ref)}
+                  disabled={deleteMutation.isPending}
+              >
+                Supprimer
+              </button>
+              {/* Tu peux aussi ajouter un bouton "Modifier" ici */}
+            </li>
+        ))}
+      </ul>
   );
 };
 

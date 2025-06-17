@@ -77,10 +77,14 @@ export interface OrderLine {
 }
 
 export interface Reservation {
-  id: number;
+  id?: number;
+  date: string;  // ISO date string
   slot: Slot;
   nbPersons: number;
-  date: string; // ou Date, selon comment tu veux gérer
-  customer: Customer;
-  version: number;
+  customer: {
+    id: number;
+    firstname: string;
+    lastname: string;
+  };
+  version?: number;
 }

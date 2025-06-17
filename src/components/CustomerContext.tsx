@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
-import type { Customer } from "./models/Customer";
+import type {Customer} from "./types";
 
 interface CustomerContextType {
   customer: Customer | null;
@@ -34,9 +34,9 @@ export const CustomerProvider = ({ children }: CustomerProviderProps) => {
   };
 
   return (
-    <CustomerContext.Provider value={{ customer, setCustomer, photo, setPhoto, logout }}>
-      {children}
-    </CustomerContext.Provider>
+      <CustomerContext.Provider value={{ customer, setCustomer, photo, setPhoto, logout }}>
+        {children}
+      </CustomerContext.Provider>
   );
 };
 
