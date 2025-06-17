@@ -6,7 +6,13 @@ import {
   useUpdateOrderLine,
 } from "./hooks/OrderLines.ts/OrderLinesMutation";
 
-function BasketPreviewItem({ isSearchComponent, order, ligne, onOrderChange }) {
+function BasketPreviewItem({
+  isSearchComponent,
+  order,
+  ligne,
+  onLineChange,
+  onLineDelete,
+}) {
   const priceItem = ligne?.item?.price;
   const [nbItem, setNbItem] = useState(ligne.quantity);
   const [priceLine, setPriceLine] = useState(ligne.line_price);
@@ -19,11 +25,23 @@ function BasketPreviewItem({ isSearchComponent, order, ligne, onOrderChange }) {
   const updateMutation = useUpdateOrderLine();
   const deleteMutation = useDeleteOrderLine();
 
-  const handleUpdate = () => {
-    onOrderChange();
-    console.log("order : ", order);
-    console.log("client : ", ligne);
-    if (nbItem > 0) {
+  const handleAdd = () => {
+    updateMutation.mutate(
+      {
+        ...ligne,
+        order: {
+          id: order.id,
+        },
+        version,
+      },
+      {
+        onSuccess: () => onSuccess && onSuccess(),
+      }
+    );
+  };
+
+  const handleRemove = () => {
+    if (nbItem - 1 > 0) {
       updateMutation.mutate(
         {
           ...ligne,
@@ -38,8 +56,20 @@ function BasketPreviewItem({ isSearchComponent, order, ligne, onOrderChange }) {
       );
     } else {
       deleteMutation.mutate(ligne.id);
+      onLineDelete(ligne.id);
     }
   };
+
+  const handleDeleteButton = () => {
+    order.totalPrice -= ligne.line_price;
+    ligne.quantity = 0;
+    setPriceLine(0);
+    onLineChange();
+    deleteMutation.mutate(ligne.id);
+    onLineDelete(ligne.id);
+  };
+
+  const handleAddToCart = () => {};
 
   const addItem = () => {
     setNbItem(nbItem + 1);
@@ -50,7 +80,8 @@ function BasketPreviewItem({ isSearchComponent, order, ligne, onOrderChange }) {
     order.order_lines = order.order_lines.map((line) =>
       line.id === ligne.id ? ligne : line
     );
-    handleUpdate();
+    onLineChange();
+    handleAdd();
   };
 
   const removeItem = () => {
@@ -63,7 +94,8 @@ function BasketPreviewItem({ isSearchComponent, order, ligne, onOrderChange }) {
       order.order_lines = order.order_lines.map((line) =>
         line.id === ligne.id ? ligne : line
       );
-      handleUpdate();
+      onLineChange();
+      handleRemove();
     }
   };
 
@@ -82,7 +114,15 @@ function BasketPreviewItem({ isSearchComponent, order, ligne, onOrderChange }) {
               <span>{priceItem} €</span>
             </div>
           </div>
-          <button>
+          <button
+            onClick={() => {
+              if (!isSearchComponent) {
+                handleDeleteButton(); // Action quand isSearchComponent est false
+              } else {
+                handleAddToCart(); // Action quand isSearchComponent est true
+              }
+            }}
+          >
             {!isSearchComponent && (
               <i className="fa-solid fa-trash fa fa-lg"></i>
             )}

@@ -20,6 +20,9 @@ function Basket({ client }) {
   const handleUpdate = () => {
     setTotalPrice(order.totalPrice);
   };
+  const handleDelete = (i) => {
+    order.order_lines = order.order_lines.filter((line) => line.id !== i);
+  };
 
   return (
     <div
@@ -76,7 +79,8 @@ function Basket({ client }) {
                   isSearchComponent={false}
                   order={order}
                   ligne={orderLine}
-                  onOrderChange={handleUpdate}
+                  onLineChange={handleUpdate}
+                  onLineDelete={handleDelete}
                 />
               ) : null
             )}
