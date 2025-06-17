@@ -1,103 +1,104 @@
 import { useState } from "react";
 import styles from "./Basket.module.scss";
 import BasketPreviewItem from "./BasketPreviewItem";
+
+import { toStringAdresse } from "./types";
 import GenericModal from "./GenericModal";
 import SearchItem from "./SearchItem";
 
-function Basket() {
-  const [showItems, setShowItems] = useState(false);
+function getFirstIncompleteOrder(customer) {
+  const order = customer.orders.find((o) => o.status === "INCOMPLETE");
+  return order || null;
+}
 
-  const [totalPrice, setTotalPrice] = useState(0);
+function Basket({ client }) {
+  const [showItems, setShowItems] = useState(false);
+  const [order, setOrder] = useState(getFirstIncompleteOrder(client));
+  const [totalPrice, setTotalPrice] = useState(order.totalPrice);
+
+  const handleUpdate = () => {
+    setTotalPrice(order.totalPrice);
+  };
+  const handleDelete = (i) => {
+    order.order_lines = order.order_lines.filter((line) => line.id !== i);
+  };
 
   return (
+    <div
+      className={`${styles.PanierComponent} flex-fill row d-flex flex-column`}
+    >
       <div
-          className={`${styles.PanierComponent} flex-fill row d-flex flex-column`}
+        className={`${styles.ShippingAddress} col-auto d-flex justify-content-between align-items-center mb-3 `}
+      >
+        <span>{toStringAdresse(client?.addresses?.[0])}</span>
+
+        <button className="d-flex align-items-center">
+          <i className="fa-solid fa-arrows-rotate me-1"></i>
+          <span>Changer</span>
+        </button>
+      </div>
+      <div
+        className={`${styles.Content} col content flex-fil d-flex flex-column justify-content-center`}
       >
         <div
-            className={`${styles.ShippingAddress} col-auto d-flex justify-content-between align-items-center mb-3 `}
+          className={`${styles.AdditionCard} d-flex flex-column justify-content-center align-items-center mb-3 gap-3`}
         >
-          <span>Rue Bonnefoi, 75008 Paris</span>
-          <button className="d-flex align-items-center">
-            <i className="fa-solid fa-arrows-rotate me-1"></i>
-            <span>Changer</span>
+          <span>Besoin de quelque chose en particulier ?</span>
+          <button
+            className="d-flex align-items-center"
+            onClick={() => setShowItems(true)}
+          >
+            <i className="fa-solid fa-arrows-rotate me-2"></i>
+            <span>Ajouter un plat</span>
           </button>
         </div>
-        <div
-            className={`${styles.Content} col content flex-fil d-flex flex-column justify-content-center`}
-        >
-          <div
-              className={`${styles.AdditionCard} d-flex flex-column justify-content-center align-items-center mb-3 gap-3`}
+        {showItems && (
+          <GenericModal
+            show={showItems}
+            showHeader={true}
+            onClose={() => setShowItems(false)}
+            title="Ajouter un produit"
+            placement="start"
           >
-            <span>Besoin de quelque chose en particulier ?</span>
-            <button
-                className="d-flex align-items-center"
-                onClick={() => setShowItems(true)}
-            >
-              <i className="fa-solid fa-arrows-rotate me-2"></i>
-              <span>Ajouter un plat</span>
-            </button>
-          </div>
-          {showItems && (
-              <GenericModal
-                  show={showItems}
-                  showHeader={true}
-                  onClose={() => setShowItems(false)}
-                  title="Ajouter un produit"
-                  placement="start"
-              >
-                <SearchItem />
-              </GenericModal>
+            <SearchItem />
+          </GenericModal>
+        )}
+        <div
+          className={`${styles.Order}  basket-list flex-fill  d-flex flex-column mb-3`}
+        >
+          {!order && !order.order_lines && order.order_lines.length == 0 && (
+            <p>Vous n'avez pas encore sélectionné de repas.</p>
           )}
-          <div
-              className={`${styles.Order}  basket-list flex-fill  d-flex flex-column mb-3`}
-          >
-            {/*           <p>Vous n'avez pas encore sélectionné de repas.</p>
-           */}
-            <div className={`${styles.BasketList}`}>
-              <BasketPreviewItem
-                  isSearchComponent={false}
-                  quantity={0}
-                  price={3}
-                  totalPrice={totalPrice}
-                  setTotalPrice={setTotalPrice}
-              />
-              <BasketPreviewItem
-                  isSearchComponent={false}
-                  quantity={0}
-                  price={6}
-                  totalPrice={totalPrice}
-                  setTotalPrice={setTotalPrice}
-              />
-              <BasketPreviewItem
-                  isSearchComponent={false}
-                  quantity={0}
-                  price={2}
-                  totalPrice={totalPrice}
-                  setTotalPrice={setTotalPrice}
-              />
-              <BasketPreviewItem
-                  isSearchComponent={false}
-                  quantity={0}
-                  price={2}
-                  totalPrice={totalPrice}
-                  setTotalPrice={setTotalPrice}
-              />
-            </div>
-          </div>
-        </div>
 
-        <div
-            className={`${styles.PlaceOrder} col-auto d-flex justify-content-between align-items-center`}
-        >
-          <div className={`${styles.TotalPrice} d-flex flex-column`}>
-            <p>{totalPrice} €</p>
-            <span>dans mon panier</span>
+          <div className={`${styles.BasketList}`}>
+            {order.order_lines.map((orderLine, index) =>
+              orderLine.quantity > 0 ? (
+                <BasketPreviewItem
+                  key={index}
+                  isSearchComponent={false}
+                  order={order}
+                  ligne={orderLine}
+                  onLineChange={handleUpdate}
+                  onLineDelete={handleDelete}
+                />
+              ) : null
+            )}
           </div>
-          <button className="Btn Btn-primary d-flex align-items-center">
-            <span>Passer commande</span>
-          </button>
         </div>
       </div>
+
+      <div
+        className={`${styles.PlaceOrder} col-auto d-flex justify-content-between align-items-center`}
+      >
+        <div className={`${styles.TotalPrice} d-flex flex-column`}>
+          <p>{totalPrice} €</p>
+          <span>dans mon panier</span>
+        </div>
+        <button className="Btn Btn-primary d-flex align-items-center">
+          <span>Passer commande</span>
+        </button>
+      </div>
+    </div>
   );
 }
 

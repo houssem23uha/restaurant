@@ -3,7 +3,7 @@ import { fetchCustomer } from "../../api/customersApi";
 
 export const useCustomer = (id: number) => {
   return useQuery({
-    queryKey: ["customer", id],
+    queryKey: ["customers", id],
     queryFn: () => fetchCustomer(id),
     enabled: !!id,
   });

@@ -1,10 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./SearchItem.module.scss";
+import { useItems } from "./hooks/items/useItems";
 import BasketPreviewItem from "./BasketPreviewItem";
 
 const tabsData = ["Entree", "Plat", "Dessert", "Boisson"];
 
 function SearchItem() {
+  const { data: items, isLoading, error } = useItems();
+
+  const [filter, setFilter] = useState<string>("");
   const [activeIndex, setActiveIndex] = useState(0);
   const tabsRef = useRef([]);
   const sliderRef = useRef(null);
@@ -17,6 +21,15 @@ function SearchItem() {
       sliderRef.current.style.left = `${activeTab.offsetLeft}px`;
     }
   }, [activeIndex]);
+
+  if (isLoading) return <p>Chargement...</p>;
+  if (error instanceof Error) return <p>Erreur : {error.message}</p>;
+
+  // Appliquer le filtre (ex: par catégorie, type, etc.)
+  const filteredItems = filter
+    ? items.filter((item) => item.category === filter) // adapte ce champ
+    : items;
+  console.log("filteredItems", filteredItems); // Debug
 
   return (
       <div className={`${styles.SearchItem} flex-fill row d-flex flex-column`}>
@@ -60,39 +73,20 @@ function SearchItem() {
           >
             {/*           <p>Vous n'avez pas encore sélectionné de repas.</p>
            */}
-            <div className={`${styles.BasketList}`}>
+          <div className={`${styles.BasketList}`}>
+            {filteredItems.map(() => (
               <BasketPreviewItem
-                  isSearchComponent={true}
-                  quantity={0}
-                  price={3}
-                  totalPrice={totalPrice}
-                  setTotalPrice={setTotalPrice}
+                isSearchComponent={true}
+                order={{}}
+                ligne={{}}
+                onLineChange={() => {}}
+                onLineDelete={() => {}}
               />
-              <BasketPreviewItem
-                  isSearchComponent={true}
-                  quantity={0}
-                  price={6}
-                  totalPrice={totalPrice}
-                  setTotalPrice={setTotalPrice}
-              />
-              <BasketPreviewItem
-                  isSearchComponent={true}
-                  quantity={0}
-                  price={2}
-                  totalPrice={totalPrice}
-                  setTotalPrice={setTotalPrice}
-              />
-              <BasketPreviewItem
-                  isSearchComponent={true}
-                  quantity={0}
-                  price={2}
-                  totalPrice={totalPrice}
-                  setTotalPrice={setTotalPrice}
-              />
-            </div>
+            ))}
           </div>
         </div>
       </div>
+    </div>
   );
 }
 

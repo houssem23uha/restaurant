@@ -1,7 +1,7 @@
 export type Category = "STARTER" | "MAIN" | "DRINK" | "DESSERT"; // compléter si besoin
 export const CATEGORIES: Category[] = ["STARTER", "MAIN", "DRINK", "DESSERT"];
 
-export type Status = "PENDING" | "VALIDATED" | "CANCELLED"; // idem
+export type Status = "PENDING" | "VALIDATED" | "CANCELLED " | "INCOMPLETE"; // idem
 
 export type Slot = "MORNING" | "AFTERNOON" | "EVENING"; // idem
 
@@ -40,6 +40,12 @@ export interface Address {
   version: number;
 }
 
+export function toStringAdresse(adresse: Address): string {
+  const { street = "", postalCode = "", city = "" } = adresse;
+
+  return `${street}, ${postalCode} ${city}`.trim();
+}
+
 export interface Authentification {
   id: number;
   login: string;
@@ -59,7 +65,7 @@ export interface Customer extends Authentification {
 }
 
 export interface Order {
-  id: number;
+  id?: number;
   totalPrice: number;
   status: Status;
   order_lines: OrderLine[];
