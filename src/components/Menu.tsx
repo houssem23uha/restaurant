@@ -16,6 +16,7 @@ function Menu() {
   const filteredItems = filter
     ? items.filter((item) => item.category === filter) // adapte ce champ
     : items;
+  console.log("filteredItems", filteredItems); // Debug
 
   return (
     <>
@@ -32,7 +33,7 @@ function Menu() {
 
         <div className="grid my-5">
           {filteredItems.map((item) => (
-            <Recipe key={item.ref} vote={false} item={item} />
+            <Recipe key={item.ref} vote={false} item={item} onRate={() => {}} />
           ))}
         </div>
       </div>

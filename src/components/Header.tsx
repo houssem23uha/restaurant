@@ -1,14 +1,37 @@
-import { useState } from "react";
-import styles from "./Header.module.scss";
+import { useEffect, useState } from "react";
+/* import { type Customer, type Order } from "./types";
+ */ import styles from "./Header.module.scss";
 import HeaderBar from "./HeaderBar";
 import MenuModal from "./MenuModal";
 import GenericModal from "./GenericModal";
 import Basket from "./Basket";
-/* import MenuModal from "./MenuModal";
+import { useCustomerswithOrdersLines } from "./hooks/customers/useCustomers";
+/* import { useCustomerswithOrdersLines } from "./hooks/customers/useCustomers";
+ */ /* import MenuModal from "./MenuModal";
+ */
+
+/* function getFirstIncompleteOrder(customer: Customer): Order | null {
+  // On cherche la première commande avec le status "INCOMPLET"
+  const order = customer.orders.find((o) => o.status === "INCOMPLETE");
+  return order || null;
+}
  */
 function Header() {
   const [showModal, setModalOpen] = useState(false);
   const [showPanier, setShowPanier] = useState(false);
+  const [customer, setCustomer] = useState(null);
+
+  const { data: customers, isLoading, error } = useCustomerswithOrdersLines();
+
+  useEffect(() => {
+    if (customers && customers.length > 0) {
+      const cust = customers.find((c) => c.id === 1) || null;
+      setCustomer(cust);
+    }
+  }, [customers]);
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading customers.</div>;
 
   return (
     <div className={`${styles.header} d-flex flex-column mb-3`}>
@@ -79,7 +102,7 @@ function Header() {
                   title="Mon panier"
                   placement="start"
                 >
-                  <Basket />
+                  <Basket client={customer} />
                 </GenericModal>
               )}
             </li>

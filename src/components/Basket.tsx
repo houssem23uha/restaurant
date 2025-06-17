@@ -1,13 +1,25 @@
 import { useState } from "react";
 import styles from "./Basket.module.scss";
 import BasketPreviewItem from "./BasketPreviewItem";
+
+import { toStringAdresse } from "./types";
 import GenericModal from "./GenericModal";
 import SearchItem from "./SearchItem";
+import { useUpdateCustomer } from "./hooks/customers/useCustomerMutations";
 
-function Basket() {
+function getFirstIncompleteOrder(customer: Customer): Order | null {
+  const order = customer.orders.find((o) => o.status === "INCOMPLETE");
+  return order || null;
+}
+
+function Basket({ client }) {
   const [showItems, setShowItems] = useState(false);
+  const [order, setOrder] = useState(getFirstIncompleteOrder(client));
+  const [totalPrice, setTotalPrice] = useState(order.totalPrice);
 
-  const [totalPrice, setTotalPrice] = useState(0);
+  const handleUpdate = () => {
+    setTotalPrice(order.totalPrice);
+  };
 
   return (
     <div
@@ -16,7 +28,8 @@ function Basket() {
       <div
         className={`${styles.ShippingAddress} col-auto d-flex justify-content-between align-items-center mb-3 `}
       >
-        <span>Rue Bonnefoi, 75008 Paris</span>
+        <span>{toStringAdresse(client?.addresses?.[0])}</span>
+
         <button className="d-flex align-items-center">
           <i className="fa-solid fa-arrows-rotate me-1"></i>
           <span>Changer</span>
@@ -51,37 +64,22 @@ function Basket() {
         <div
           className={`${styles.Order}  basket-list flex-fill  d-flex flex-column mb-3`}
         >
-          {/*           <p>Vous n'avez pas encore sélectionné de repas.</p>
-           */}
+          {!order && !order.order_lines && order.order_lines.length == 0 && (
+            <p>Vous n'avez pas encore sélectionné de repas.</p>
+          )}
+
           <div className={`${styles.BasketList}`}>
-            <BasketPreviewItem
-              isSearchComponent={false}
-              quantity={0}
-              price={3}
-              totalPrice={totalPrice}
-              setTotalPrice={setTotalPrice}
-            />
-            <BasketPreviewItem
-              isSearchComponent={false}
-              quantity={0}
-              price={6}
-              totalPrice={totalPrice}
-              setTotalPrice={setTotalPrice}
-            />
-            <BasketPreviewItem
-              isSearchComponent={false}
-              quantity={0}
-              price={2}
-              totalPrice={totalPrice}
-              setTotalPrice={setTotalPrice}
-            />
-            <BasketPreviewItem
-              isSearchComponent={false}
-              quantity={0}
-              price={2}
-              totalPrice={totalPrice}
-              setTotalPrice={setTotalPrice}
-            />
+            {order.order_lines.map((orderLine, index) =>
+              orderLine.quantity > 0 ? (
+                <BasketPreviewItem
+                  key={index}
+                  isSearchComponent={false}
+                  order={order}
+                  ligne={orderLine}
+                  onOrderChange={handleUpdate}
+                />
+              ) : null
+            )}
           </div>
         </div>
       </div>

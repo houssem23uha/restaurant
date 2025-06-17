@@ -1,69 +1,29 @@
 import styles from "./BasketPreviewItem.module.scss";
 import itemImage from "../assets/images/default.jpg";
 import { useState } from "react";
-import {
-  useDeleteOrderLine,
-  useUpdateOrderLine,
-} from "./hooks/OrderLines.ts/OrderLinesMutation";
 
-function BasketPreviewItem({ isSearchComponent, order, ligne, onOrderChange }) {
-  const priceItem = ligne?.item?.price;
-  const [nbItem, setNbItem] = useState(ligne.quantity);
-  const [priceLine, setPriceLine] = useState(ligne.line_price);
-  const [version, setVersion] = useState(ligne.version);
-
-  const onSuccess = () => {
-    setVersion(version + 1);
-  };
-
-  const updateMutation = useUpdateOrderLine();
-  const deleteMutation = useDeleteOrderLine();
-
-  const handleUpdate = () => {
-    onOrderChange();
-    console.log("order : ", order);
-    console.log("client : ", ligne);
-    if (nbItem > 0) {
-      updateMutation.mutate(
-        {
-          ...ligne,
-          order: {
-            id: order.id,
-          },
-          version,
-        },
-        {
-          onSuccess: () => onSuccess && onSuccess(),
-        }
-      );
-    } else {
-      deleteMutation.mutate(ligne.id);
-    }
-  };
+function BasketPreviewItemA({
+  isSearchComponent,
+  quantity,
+  price,
+  totalPrice,
+  setTotalPrice,
+}) {
+  const priceItem = price;
+  const [nbItem, setNbItem] = useState(quantity);
+  const [priceLine, setPriceLine] = useState(priceItem * quantity);
 
   const addItem = () => {
     setNbItem(nbItem + 1);
-    ligne.quantity += 1;
-    ligne.line_price += priceItem;
-    setPriceLine(ligne.line_price);
-    order.totalPrice += priceItem;
-    order.order_lines = order.order_lines.map((line) =>
-      line.id === ligne.id ? ligne : line
-    );
-    handleUpdate();
+    setTotalPrice(totalPrice + priceItem);
+    setPriceLine(priceLine + priceItem);
   };
 
   const removeItem = () => {
     if (nbItem > 0) {
       setNbItem(nbItem - 1);
-      ligne.quantity -= 1;
-      ligne.line_price -= priceItem;
-      setPriceLine(ligne.line_price);
-      order.totalPrice -= priceItem;
-      order.order_lines = order.order_lines.map((line) =>
-        line.id === ligne.id ? ligne : line
-      );
-      handleUpdate();
+      setTotalPrice(totalPrice - priceItem);
+      setPriceLine(priceLine - priceItem);
     }
   };
 
@@ -79,7 +39,7 @@ function BasketPreviewItem({ isSearchComponent, order, ligne, onOrderChange }) {
           <div className={`${styles.Infos} flex-fill d-flex flex-column gap-2`}>
             <span>Fromage blanc nature 400g</span>
             <div className={`${styles.Capacity}`}>
-              <span>{priceItem} €</span>
+              <span>{price} €</span>
             </div>
           </div>
           <button>
@@ -105,7 +65,7 @@ function BasketPreviewItem({ isSearchComponent, order, ligne, onOrderChange }) {
           <button onClick={() => removeItem()}>
             <i className="fa-solid fa-minus"></i>
           </button>
-          <span className="InputValueContainer">{ligne.quantity}</span>
+          <span className="InputValueContainer">{nbItem}</span>
           <button onClick={() => addItem()}>
             <i className="fa-solid fa-plus"></i>
           </button>
@@ -115,4 +75,4 @@ function BasketPreviewItem({ isSearchComponent, order, ligne, onOrderChange }) {
   );
 }
 
-export default BasketPreviewItem;
+export default BasketPreviewItemA;

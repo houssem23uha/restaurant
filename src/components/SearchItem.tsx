@@ -1,7 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./SearchItem.module.scss";
-import BasketPreviewItem from "./BasketPreviewItem";
-
 const tabsData = ["Entree", "Plat", "Dessert", "Boisson"];
 
 function SearchItem() {
@@ -61,7 +59,7 @@ function SearchItem() {
           {/*           <p>Vous n'avez pas encore sélectionné de repas.</p>
            */}
           <div className={`${styles.BasketList}`}>
-            <BasketPreviewItem
+            {/*             <BasketPreviewItem
               isSearchComponent={true}
               quantity={0}
               price={3}
@@ -88,7 +86,7 @@ function SearchItem() {
               price={2}
               totalPrice={totalPrice}
               setTotalPrice={setTotalPrice}
-            />
+            /> */}
           </div>
         </div>
       </div>
