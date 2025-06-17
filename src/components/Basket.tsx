@@ -7,7 +7,7 @@ import GenericModal from "./GenericModal";
 import SearchItem from "./SearchItem";
 import { useUpdateCustomer } from "./hooks/customers/useCustomerMutations";
 
-function getFirstIncompleteOrder(customer: Customer): Order | null {
+function getFirstIncompleteOrder(customer) {
   const order = customer.orders.find((o) => o.status === "INCOMPLETE");
   return order || null;
 }

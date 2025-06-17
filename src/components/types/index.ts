@@ -64,7 +64,7 @@ export interface Customer extends Authentification {
 }
 
 export interface Order {
-  id: number;
+  id?: number;
   totalPrice: number;
   status: Status;
   order_lines: OrderLine[];
