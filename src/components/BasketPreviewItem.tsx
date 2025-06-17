@@ -63,9 +63,11 @@ function BasketPreviewItem({
   const handleDeleteButton = () => {
     order.totalPrice -= ligne.line_price;
     ligne.quantity = 0;
-    setPriceLine(0);
     onLineChange();
-    deleteMutation.mutate(ligne.id);
+    const id = ligne.id;
+    deleteMutation.mutate(id);
+    order.order_lines = order.order_lines.filter((line) => line.id !== id);
+
     onLineDelete(ligne.id);
   };
 
