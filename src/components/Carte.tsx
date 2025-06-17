@@ -1,6 +1,6 @@
 import styles from './Carte.module.scss';
 import React, { useEffect, useState } from "react";
-import type { Item } from "./models/Item";
+import type { Item } from "./types/index";
 import { getItems } from "./services/itemService";
 
 
