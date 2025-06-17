@@ -2,50 +2,42 @@ import { useState,useEffect } from "react";
 import styles from "./Header.module.scss";
 import MenuModal from "./MenuModal";
 import HeaderBarHome from "./HeaderBarHome";
+import GenericModal from "./GenericModal";
+import MenuLinks from "./MenuLinks";
 
 function HeaderHome() {
-    const [scrolled, setScrolled] = useState(false);
-    const [showModal, setModalOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [showModal, setModalOpen] = useState(false);
 
-    // Gestion de changement de couleur du header apres le scroll
-    useEffect(() => {
-        const handleScroll = () => {
-            if (window.scrollY > 800) {  //Taille de l'ecran
-                setScrolled(true);
-            } else {
-                setScrolled(false);
-            }
-        };
+  // Gestion de changement de couleur du header après le scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 800);
+    };
 
-        window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
+  return (
+    <div className={`${styles.header} ${scrolled ? styles.headerScrolled : ""} d-flex flex-column mb-3`}>
+      <div className="row">
+        <div className="col d-flex flex-row align-items-center ms-3">
+          <i
+  className="fa-solid fa-bars fa-3x"
+  onClick={() => setModalOpen(!showModal)}
+  style={{ cursor: "pointer" }}
+></i>
 
-    return (
-        <div className={`${styles.header} ${scrolled ? styles.headerScrolled : ""} d-flex flex-column mb-3`}>
-            <div className="row">
-                <div className="col d-flex flex-row align-items-center ms-3">
-                    <i
-                        className="fa-solid fa-bars fa-3x"
-                        onClick={() => setModalOpen(true)}
-                    ></i>
-                    {showModal && (
-                        <MenuModal>
-                            <i
-                                className="fa-solid fa-x fa-3x"
-                                onClick={() => setModalOpen(false)}
-                            ></i>
-                            <HeaderBarHome />
-                        </MenuModal>
-                    )}
-                    <HeaderBarHome />
-                </div>
-            </div>
-
-
+          <HeaderBarHome />
         </div>
-    );
+      </div>
+
+     {showModal && (
+  <MenuLinks show={showModal} onClose={() => setModalOpen(false)} />
+)}
+    </div>
+  );
 }
 
 export default HeaderHome;

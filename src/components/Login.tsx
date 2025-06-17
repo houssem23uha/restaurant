@@ -33,7 +33,7 @@ function Login() {
     setErrorMsg("");
 
     loginMutation.mutate(
-        { login: email, password },
+        { login: email, password  : password },
         {
           onSuccess: (customer) => {
             localStorage.setItem("customer", JSON.stringify(customer));
