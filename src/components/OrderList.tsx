@@ -28,7 +28,7 @@ function OrderList() {
       <div
         className={`${styles.MenuTitle} d-flex justify-content-center mb-3 page-title`}
       >
-        <h1>Commandes</h1>
+        <h1>Mes Commandes</h1>
       </div>
 
       <div className="my-5">

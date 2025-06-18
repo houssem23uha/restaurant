@@ -63,7 +63,45 @@ function Footer() {
             </div>
 
             <div className={`${styles.footerBottom} col-12 mt-3`}>
-              <small>© 2025 Restaurant Le Cercle – Tous droits réservés.</small>
+              <small>© 2025 Restaurant Le Cercle – Tous droits réservés.
+                Ce projet a été réalisé par de rechercheurs d'emplois que sont :
+                <ul>
+                  <li>
+                    <a
+                        href="https://www.linkedin.com/in/moussa-bah-751923227/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Linkedin - Moussa Bah"
+                        style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+                    >
+                      <i className="fa-brands fa-linkedin"></i> Moussa Bah
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                        href="https://www.linkedin.com/in/makarim-célia-bouyahiaoui?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Linkedin - Makarim Célia Bouyahiaoui"
+                        style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+                    >
+                      <i className="fa-brands fa-linkedin"></i> Makarim Célia Bouyahiaoui
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                        href="https://fr.linkedin.com/in/houssem-eddine-hadji-380952103"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Linkedin - Houssem Eddine Hadji"
+                        style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+                    >
+                      <i className="fa-brands fa-linkedin"></i> Houssem Eddine Hadji
+                    </a>
+                  </li>
+                </ul>
+
+              </small>
             </div>
           </div>
         </div>
