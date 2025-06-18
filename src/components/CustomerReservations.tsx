@@ -33,6 +33,13 @@ const CustomerReservations: React.FC = () => {
         (res) => res.customer?.id === customer.id
     );
 
+    // Trier les réservations de la plus proche à la plus lointaine
+    const sortedReservations = [...myReservations].sort((a, b) => {
+        const dateA = new Date(a.date).getTime();
+        const dateB = new Date(b.date).getTime();
+        return dateA - dateB;
+    });
+
     // Supprimer une réservation
     const handleDelete = (id: number) => {
         setLocalError(null);
@@ -119,157 +126,144 @@ const CustomerReservations: React.FC = () => {
 
     return (
         <div className={styles.container}>
+            <div className={`${styles.MenuTitle} d-flex justify-content-center mb-3 page-title`}>
+                <h1>Mes Réservations</h1>
+            </div>
+
             {localError && <p className={styles.error}>{localError}</p>}
 
             <section className={styles.customerSection}>
-                <h2>Mes réservations</h2>
-                {myReservations.length === 0 && <p>Aucune réservation pour le moment.</p>}
-                <table className={styles.reservationTable}>
-                    <thead>
-                    <tr>
-                        <th>Description</th>
-                        <th>Supprimer</th>
-                        <th>Modifier</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {myReservations.map((res) => (
-                        <tr key={res.id} className={styles.reservationRow}>
-                            <td>
-                                <strong>
-                                    {format(new Date(res.date), "dd MMM yyyy", { locale: fr })}
-                                </strong>
-                                {" • "}
-                                {res.slot}
-                                {" • "}
-                                {res.nbPersons} {res.nbPersons > 1 ? "personnes" : "personne"}
-                            </td>
-                            <td>
-                                {!isPast(res) && (
-                                    <button
-                                        onClick={() => handleDelete(res.id!)}
-                                        aria-label="Supprimer"
-                                        disabled={deleteMutation.isPending}
-                                    >
-                                        <FaTrashAlt />
-                                    </button>
-                                )}
-                            </td>
-                            <td>
-                                {!isPast(res) && (
-                                    <button
-                                        onClick={() =>
-                                            setEditing({ reservation: { ...res }, customerKey: customer.firstname })
-                                        }
-                                        aria-label="Modifier"
-                                    >
-                                        <FaEdit />
-                                    </button>
-                                )}
-                            </td>
-                        </tr>
-                    ))}
-
-                    {editing && (
+                {sortedReservations.length === 0 ? (
+                    <p>Aucune réservation pour le moment.</p>
+                ) : (
+                    <table className={styles.reservationTable}>
+                        <thead>
                         <tr>
-                            <td colSpan={3}>
-                                <form
-                                    onSubmit={(e) => {
-                                        e.preventDefault();
-                                        if (editing) {
-                                            const { reservation } = editing;
-                                            handleUpdate(reservation.id!, {
-                                                date: reservation.date,
-                                                slot: reservation.slot,
-                                                nbPersons: reservation.nbPersons,
-                                            });
-                                        }
-                                    }}
-                                    style={{
-                                        display: "flex",
-                                        gap: "12px",
-                                        alignItems: "center",
-                                        flexWrap: "wrap",
-                                    }}
-                                >
-                                    <label>
-                                        Date:
-                                        <input
-                                            type="date"
-                                            value={
-                                                typeof editing.reservation.date === "string"
-                                                    ? editing.reservation.date
-                                                    : format(new Date(editing.reservation.date), "yyyy-MM-dd")
-                                            }
-                                            onChange={(e) => handleEditChange("date", e.target.value)}
-                                            required
-                                            style={{ marginLeft: 6 }}
-                                        />
-                                    </label>
-
-                                    <label>
-                                        Horaire:
-                                        <select
-                                            value={editing.reservation.slot}
-                                            onChange={(e) => handleEditChange("slot", e.target.value)}
-                                            style={{ marginLeft: 6 }}
-                                        >
-                                            <option value="MORNING">MORNING</option>
-                                            <option value="AFTERNOON">AFTERNOON</option>
-                                            <option value="EVENING">EVENING</option>
-                                        </select>
-                                    </label>
-
-                                    <label>
-                                        Personnes:
-                                        <input
-                                            type="number"
-                                            min={1}
-                                            value={editing.reservation.nbPersons}
-                                            onChange={(e) => handleEditChange("nbPersons", Number(e.target.value))}
-                                            required
-                                            style={{ width: 70, marginLeft: 6 }}
-                                        />
-                                    </label>
-
-                                    <button
-                                        type="submit"
-                                        style={{
-                                            padding: "8px 16px",
-                                            fontWeight: "700",
-                                            cursor: "pointer",
-                                            backgroundColor: "#f5b800",
-                                            border: "none",
-                                            borderRadius: 6,
-                                            color: "#2a2a2a",
-                                        }}
-                                        disabled={updateMutation.isPending}
-                                    >
-                                        Valider
-                                    </button>
-
-                                    <button
-                                        type="button"
-                                        onClick={() => setEditing(null)}
-                                        style={{
-                                            padding: "8px 16px",
-                                            fontWeight: "700",
-                                            cursor: "pointer",
-                                            backgroundColor: "#e76b6b",
-                                            border: "none",
-                                            borderRadius: 6,
-                                            color: "#6b1b1b",
-                                        }}
-                                        disabled={updateMutation.isPending}
-                                    >
-                                        Annuler
-                                    </button>
-                                </form>
-                            </td>
+                            <th>Description</th>
+                            <th style={{ textAlign: "center" }}>Supprimer</th>
+                            <th style={{ textAlign: "center" }}>Modifier</th>
                         </tr>
-                    )}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                        {sortedReservations.map((res) => (
+                            <tr
+                                key={res.id}
+                                className={`${styles.reservationRow} ${isPast(res) ? styles.pastReservation : ""}`}
+                            >
+                                <td>
+                                    <strong>
+                                        {format(new Date(res.date), "dd MMM yyyy", { locale: fr })}
+                                    </strong>{" "}
+                                    • {res.slot} • {res.nbPersons}{" "}
+                                    {res.nbPersons > 1 ? "personnes" : "personne"}
+                                </td>
+                                <td style={{ textAlign: "center" }}>
+                                    {!isPast(res) && (
+                                        <button
+                                            onClick={() => handleDelete(res.id!)}
+                                            aria-label="Supprimer"
+                                            disabled={deleteMutation.isPending}
+                                        >
+                                            <FaTrashAlt />
+                                        </button>
+                                    )}
+                                </td>
+                                <td style={{ textAlign: "center" }}>
+                                    {!isPast(res) && (
+                                        <button
+                                            onClick={() =>
+                                                setEditing({
+                                                    reservation: { ...res },
+                                                    customerKey: customer.firstname,
+                                                })
+                                            }
+                                            aria-label="Modifier"
+                                        >
+                                            <FaEdit />
+                                        </button>
+                                    )}
+                                </td>
+                            </tr>
+                        ))}
+
+                        {editing && (
+                            <tr>
+                                <td colSpan={3}>
+                                    <form
+                                        onSubmit={(e) => {
+                                            e.preventDefault();
+                                            if (editing) {
+                                                const { reservation } = editing;
+                                                handleUpdate(reservation.id!, {
+                                                    date: reservation.date,
+                                                    slot: reservation.slot,
+                                                    nbPersons: reservation.nbPersons,
+                                                });
+                                            }
+                                        }}
+                                    >
+                                        <label>
+                                            Date:
+                                            <input
+                                                type="date"
+                                                value={
+                                                    typeof editing.reservation.date === "string"
+                                                        ? editing.reservation.date
+                                                        : format(new Date(editing.reservation.date), "yyyy-MM-dd")
+                                                }
+                                                onChange={(e) => handleEditChange("date", e.target.value)}
+                                                required
+                                            />
+                                        </label>
+
+                                        <label>
+                                            Horaire:
+                                            <select
+                                                value={editing.reservation.slot}
+                                                onChange={(e) => handleEditChange("slot", e.target.value)}
+                                            >
+                                                <option value="MORNING">MORNING</option>
+                                                <option value="AFTERNOON">AFTERNOON</option>
+                                                <option value="EVENING">EVENING</option>
+                                            </select>
+                                        </label>
+
+                                        <label>
+                                            Personnes:
+                                            <input
+                                                type="number"
+                                                min={1}
+                                                value={editing.reservation.nbPersons}
+                                                onChange={(e) =>
+                                                    handleEditChange("nbPersons", Number(e.target.value))
+                                                }
+                                                required
+                                            />
+                                        </label>
+
+                                        <button
+                                            type="submit"
+                                            className={styles.confirmButton}
+                                            disabled={updateMutation.isPending}
+                                        >
+                                            Valider
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            onClick={() => setEditing(null)}
+                                            className={styles.cancelButton}
+                                            disabled={updateMutation.isPending}
+                                        >
+                                            Annuler
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        )}
+                        </tbody>
+                    </table>
+                )}
             </section>
         </div>
     );

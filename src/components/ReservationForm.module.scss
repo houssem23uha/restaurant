@@ -3,121 +3,125 @@
   justify-content: center;
   align-items: flex-start;
   min-height: 100vh;
-  padding: 24px 16px;
+  padding: 48px 16px;
+  overflow: visible;
+  background-color: transparent;
 }
 
-/* === Formulaire de réservation === */
 .reservationForm {
-  width: 100%;
-  max-width: 640px;
-  padding: 40px 24px;
-  background-color: #db9648;
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  width: 50vw; // ✅ Formulaire occupe la moitié de la largeur de l'écran
+  min-width: 480px; // Pour éviter qu’il devienne trop petit sur petits écrans
+  padding: 64px 40px;
+  background-color: #fff4dc;
+  border-radius: 24px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.08);
   font-family: "Inter", sans-serif;
-  color: #2a2a2a;
-  box-sizing: border-box;
+  color: #5c4200;
 
-  @media screen and (max-width: 480px) {
-    padding: 32px 20px;
+  @media screen and (max-width: 768px) {
+    width: 100%;
+    padding: 40px 24px;
   }
-
-  .successMessage {
-    margin-top: 1rem;
-    color: green;
-    font-weight: bold;
-    font-size: 1.1rem;
-    text-align: center;
-  }
-
-  .errorMessageBottom {
-    color: red;
-    font-weight: bold;
-    margin-top: 1rem;
-    font-size: 1.1rem;
-    text-align: center;
-  }
-
 
   h2 {
-    font-size: 2rem;
+    font-size: 2.5rem;
     font-weight: 700;
     text-align: center;
-    margin-bottom: 36px;
+    margin-bottom: 48px;
   }
 
   label {
     display: block;
-    font-size: 1.1rem;
+    font-size: 1.25rem;
     font-weight: 600;
-    margin: 24px 0 8px;
-    color: #2a2a2a;
+    margin: 32px 0 12px;
   }
 
   hr {
     border: none;
-    border-top: 1px solid #c07d30;
-    margin: 24px 0;
+    border-top: 1px solid #5c4200;
+    margin: 32px 0;
+  }
+
+  .successMessage {
+    margin-top: 2rem;
+    color: #2e7d32;
+    font-weight: 700;
+    font-size: 1.8rem;
+    text-align: center;
+  }
+
+  .errorMessage {
+    margin-top: 1rem;
+    color: #b30000;
+    font-weight: 700;
+    font-size: 1.5rem;
+    text-align: center;
   }
 }
 
-/* === Labels avec toggle et focus === */
 .toggleLabel {
   display: flex;
   align-items: center;
-  font-size: 1rem;
+  justify-content: space-between;
+  font-size: 1.1rem;
   font-weight: 600;
   gap: 10px;
-  color: #2a2a2a;
+  padding: 14px;
+  background-color: #f6eac9;
+  border-radius: 12px;
+  color: #5c4200;
   cursor: pointer;
-  margin-bottom: 10px;
 
   &:focus-visible {
-    outline: 2px solid #ffcb05;
-    outline-offset: 3px;
-    border-radius: 6px;
+    outline: 2px solid #5c4200;
   }
 }
 
-/* === Valeur sélectionnée mise en avant === */
 .selectedValue {
   font-weight: 700;
-  color: #2a2a2a;
-  padding: 2px 10px;
-  border-radius: 12px;
-  font-size: 0.9rem;
+  color: #5c4200;
+  background-color: transparent;
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-size: 1rem;
 }
 
-/* === Compteur (nombre de couverts) === */
+.toggleSection {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+
+  &.active {
+    max-height: 800px;
+    margin-bottom: 24px;
+    overflow: visible;
+  }
+}
+
 .counterWrapper {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 12px;
-  margin-top: 8px;
+  gap: 16px;
+  margin-top: 20px;
 
-  button {
-    width: 46px;
-    height: 46px;
-    font-size: 1.5rem;
-    width: 36px;
-    border-radius: 50%;
+  .button {
+    width: 52px;
+    height: 52px;
+    font-size: 1.8rem;
+    border-radius: 12px;
     border: none;
-    font-weight: 600;
-    background: linear-gradient(145deg, #f9d77e, #db9648);
-    color: #4b3a01;
+    font-weight: 700;
+    background-color: #fff4dc;
+    color: #5c4200;
     cursor: pointer;
     transition: all 0.2s ease;
 
     &:hover,
     &:focus-visible {
-      background: linear-gradient(145deg, #ffcb05, #f5b800);
-      color: #2a2a2a;
-      outline: none;
-    }
-
-    &:active {
-      transform: scale(0.9);
+      background-color: #f0e0b5;
+      color: #3e2f00;
     }
 
     &:disabled {
@@ -126,102 +130,130 @@
     }
   }
 
-  .inputValueContainer {
-  font-size: 2.2rem;
-  font-weight: 800;
-  color: #2a2a2a;
-  min-width: 60px;
-  text-align: center;
-  line-height: 1.2;
-}
-
-}
-
-
-/* === Wrapper pour le champ date === */
-.dateWrapper {
-  display: flex;
-  justify-content: center;
-  margin-top: 10px;
-}
-
-/* === Icon calendrier : supprimée — garder cette classe vide ou supprimer */
-.calendarIcon {
-  display: none;
-}
-
-/* === Section toggle (pliable/dépliable) === */
-.toggleSection {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease;
-
-  &.active {
-    max-height: 500px;
+  .inputValue {
+    font-size: 2.6rem;
+    font-weight: 800;
+    min-width: 70px;
+    text-align: center;
+    color: #5c4200;
   }
 }
 
-/* === Liste des horaires === */
+.calendarWrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+
+  .react-datepicker {
+    width: 100%;
+    font-size: 1.1rem;
+    font-family: "Inter", sans-serif;
+    background-color: #fff;
+    border: none;
+    box-shadow: none;
+
+    .react-datepicker__header {
+      background-color: #f6eac9;
+      border-bottom: 1px solid #ccc;
+      padding: 16px 0;
+    }
+
+    .react-datepicker__current-month,
+    .react-datepicker-time__header,
+    .react-datepicker-year-header {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #5c4200;
+    }
+
+    .react-datepicker__day,
+    .react-datepicker__day-name {
+      width: 48px;
+      line-height: 48px;
+      margin: 2px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #5c4200;
+      border-radius: 10px;
+
+      &:hover {
+        background-color: #f0e0b5;
+        cursor: pointer;
+      }
+    }
+
+    .react-datepicker__day--selected,
+    .react-datepicker__day--keyboard-selected {
+      background-color: #5c4200;
+      color: white;
+      font-weight: 700;
+    }
+
+    .react-datepicker__navigation {
+      top: 20px;
+    }
+
+    .react-datepicker__navigation-icon::before {
+      border-color: #5c4200;
+    }
+  }
+}
+
+
 .timeList {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 10px;
-  padding: 8px 0;
-  margin-top: 10px;
+  gap: 14px;
+  margin-top: 20px;
 }
 
-/* === Boutons horaires === */
 .timeSlot {
-  padding: 8px 16px;
-  font-size: 0.95rem;
+  padding: 12px 20px;
+  font-size: 1.1rem;
   font-weight: 600;
-  border-radius: 40px;
-  border: none;
-  background: linear-gradient(145deg, #f9d77e, #db9648);
-  color: #4b3a01;
+  border-radius: 30px;
+  background-color: transparent;
+  color: #5c4200;
   cursor: pointer;
-  transition: all 0.3s ease;
+  border: none;
+  transition: all 0.2s ease;
 
   &:hover,
   &:focus-visible {
-    background: linear-gradient(145deg, #ffcb05, #f5b800);
-    color: #2a2a2a;
-    outline: none;
+    background-color: #f0e0b5;
+    color: #3e2f00;
   }
 
   &.active {
-    background: linear-gradient(145deg, #db9648, #f9d77e);
-    color: #2a1e00;
-    box-shadow:
-      0 4px 10px rgba(219, 150, 72, 0.9),
-      inset 0 -2px 5px rgba(255, 255, 255, 0.4);
+    background-color: #5c4200;
+    color: #ffffff;
+    font-weight: 700;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
   }
 }
 
-/* === Bouton de soumission === */
 .submitButton {
-  margin: 32px auto 0 auto;
-  padding: 12px 48px;
-  font-size: 1.1rem;
+  margin: 48px auto 0 auto;
+  padding: 16px 64px;
+  font-size: 1.3rem;
   font-weight: 700;
-  border-radius: 40px;
+  border-radius: 30px;
   border: none;
-  background: linear-gradient(145deg, #f9d77e, #db9648);
-  color: #4b3a01;
+  background-color: #5c4200;
+  color: #ffffff;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background-color 0.3s ease;
   display: block;
 
   &:hover:enabled,
   &:focus-visible:enabled {
-    background: linear-gradient(145deg, #ffcb05, #f5b800);
-    color: #2a2a2a;
+    background-color: #7a5d00;
     outline: none;
   }
 
   &:active:enabled {
-    transform: scale(0.95);
+    transform: scale(0.97);
   }
 
   &:disabled {
