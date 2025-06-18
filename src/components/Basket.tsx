@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./Basket.module.scss";
 import BasketPreviewItem from "./BasketPreviewItem";
 import { useCustomer } from "./CustomerContext";
@@ -12,8 +12,12 @@ import {
   useUpdateOrder,
 } from "./hooks/Orders/useOrderMutation";
 
+import { useUpdateOrderLine } from "./hooks/OrderLines.ts/OrderLinesMutation";
+
+import type { Status } from "./types";
+
 function getFirstIncompleteOrder(customer) {
-  const order = customer.orders.find((o) => o.status === "PENDING");
+  const order = customer?.orders?.find((o) => o.status === "PENDING");
   return order || null;
 }
 
@@ -31,39 +35,111 @@ function ajouterOuCumulerOrderLine(order, nouvelleLigne) {
 }
 
 function Basket({ client, nouvelleLigne = null }) {
-  const [orderData, setOrderData] = useState(getFirstIncompleteOrder(client));
   const createOrderMutation = useCreateOrder();
   const updateOrderMutation = useUpdateOrder();
+
+  const [isCreatingOrder, setIsCreatingOrder] = useState(false);
 
   const [showItems, setShowItems] = useState(false);
   /*   const [order, setOrder] = useState(null);
    */ const [totalPrice, setTotalPrice] = useState(0);
 
+  console.log("client", client);
+
   const {
     data: customer,
     isLoading,
     error,
+    refetch,
   } = useCustomerwithOrdersLines(client?.id);
+
+  const [orderData, setOrderData] = useState(getFirstIncompleteOrder(customer));
+  const updateLineMutation = useUpdateOrderLine(); // hook mutation de ligne
+
+  /*   const [memoNouvelleLigne, setMemoNouvelleLigne] = useState(null);
+   */
+  /*   useEffect(() => {
+    if (nouvelleLigne && nouvelleLigne.id !== memoNouvelleLigne?.id) {
+      setMemoNouvelleLigne(nouvelleLigne);
+    }
+  }, [nouvelleLigne]); */
+
+  const [ligneMajEnBase, setLigneMajEnBase] = useState(false);
+
+  useEffect(() => {
+    console.log("je rentre", orderData, nouvelleLigne);
+
+    if (
+      orderData &&
+      nouvelleLigne &&
+      !nouvelleLigne.order &&
+      orderData.id &&
+      !ligneMajEnBase
+    ) {
+      const ligneAvecOrder = {
+        ...nouvelleLigne,
+        order: { id: orderData.id },
+      };
+
+      updateLineMutation.mutate(ligneAvecOrder, {
+        onSuccess: () => {
+          console.log("Ligne mise à jour avec succès");
+          setLigneMajEnBase(true);
+          refetch();
+        },
+        onError: (err) => {
+          console.error("Erreur lors de la mise à jour de la ligne :", err);
+        },
+      });
+    }
+    console.log("je sors", orderData, nouvelleLigne, ligneMajEnBase);
+  }, [orderData, nouvelleLigne, ligneMajEnBase]);
+
+  console.log("costo", customer);
+
+  useEffect(() => {
+    const initializeOrder = async () => {
+      if (!customer || isCreatingOrder) return;
+
+      const existingOrder = getFirstIncompleteOrder(customer);
+
+      if (existingOrder) {
+        if (nouvelleLigne != null) {
+          ajouterOuCumulerOrderLine(existingOrder, nouvelleLigne);
+        }
+        setOrderData(existingOrder);
+        return;
+      }
+
+      setIsCreatingOrder(true);
+
+      try {
+        const newOrder = {
+          status: "PENDING" as Status,
+          customer: { id: customer.id },
+          order_lines: [nouvelleLigne],
+          totalPrice: nouvelleLigne.line_price,
+        };
+
+        const createdOrder = await createOrderMutation.mutateAsync(newOrder);
+
+        setOrderData(createdOrder);
+      } catch (e) {
+        console.error("Erreur création commande :", e);
+      } finally {
+        setIsCreatingOrder(false);
+      }
+    };
+
+    initializeOrder();
+  }, [customer, nouvelleLigne]);
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
-  console.log(" customer : ", customer);
-  console.log(" client : ", client);
-  const firstOrder = getFirstIncompleteOrder(customer) || {};
-
-  console.log("nouvelleLigne", nouvelleLigne);
-  console.log("firstOrder avant ", firstOrder);
-
-  if (firstOrder && nouvelleLigne != null) {
-    ajouterOuCumulerOrderLine(firstOrder, nouvelleLigne);
-  }
-  console.log("firstOrder apres ", firstOrder);
-
-  /*
-  setOrder(firstOrder);
-  setTotalPrice(firstOrder.totalPrice || 0); */
+  let firstOrder = getFirstIncompleteOrder(customer) || {};
 
   const handleUpdate = () => {
+    console.log("handleUpdate", firstOrder, firstOrder.totalPrice);
     setTotalPrice(firstOrder.totalPrice);
   };
   const handleDelete = (i) => {
@@ -73,13 +149,22 @@ function Basket({ client, nouvelleLigne = null }) {
   };
 
   const handleCreateOrder = () => {
-    firstOrder.status = "VALIDATED";
-    console.log(firstOrder);
-    if (firstOrder.id != null) {
-      updateOrderMutation.mutate(firstOrder);
+    if (!orderData) return;
+
+    const validatedOrder = {
+      ...orderData,
+      status: "VALIDATED",
+      customer: { id: customer.id },
+    };
+
+    if (validatedOrder.id) {
+      updateOrderMutation.mutate(validatedOrder);
     } else {
-      createOrderMutation.mutate(firstOrder);
+      createOrderMutation.mutate(validatedOrder);
     }
+
+    setOrderData(null);
+    setTotalPrice(0);
   };
 
   return (
@@ -119,7 +204,7 @@ function Basket({ client, nouvelleLigne = null }) {
             title="Ajouter un produit"
             placement="start"
           >
-            <SearchItem order={firstOrder} />
+            <SearchItem order={orderData} />
           </GenericModal>
         )}
         <div
@@ -131,15 +216,21 @@ function Basket({ client, nouvelleLigne = null }) {
             <p>Vous n'avez pas encore sélectionné de repas.</p>
           )}
 
+          {(!orderData ||
+            !orderData.order_lines ||
+            orderData.order_lines.length === 0) && (
+            <p>Vous n'avez pas encore sélectionné de repas.</p>
+          )}
+
           <div className={`${styles.BasketList}`}>
-            {firstOrder &&
-              firstOrder.order_lines &&
-              firstOrder.order_lines?.map((orderLine, index) =>
+            {orderData &&
+              orderData.order_lines &&
+              orderData?.order_lines?.map((orderLine, index) =>
                 orderLine.quantity > 0 ? (
                   <BasketPreviewItem
                     key={index}
                     isSearchComponent={false}
-                    order={firstOrder}
+                    order={orderData}
                     ligne={orderLine}
                     onLineChange={handleUpdate}
                     onLineDelete={handleDelete}

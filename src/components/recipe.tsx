@@ -9,7 +9,13 @@ import Basket from "./Basket";
 import { useState } from "react";
 import { useCustomer } from "./CustomerContext";
 
+import {
+  use,
+  useCreateOrderLine,
+} from "./hooks/OrderLines.ts/OrderLinesMutation";
+
 function Recipe({ vote, item, onRate }) {
+  const [nouvelleLigne, setNouvelleLigne] = useState(null);
   const { customer } = useCustomer();
   const [showPanier, setShowPanier] = useState(false);
   const handleRate = (newRate) => {
@@ -19,6 +25,38 @@ function Recipe({ vote, item, onRate }) {
     }
   };
 
+  const createMutation = useCreateOrderLine();
+
+  const handleAdd = () => {
+    const nouvelleLigne = {
+      quantity: 1,
+      line_price: item.price,
+      item: item,
+    };
+
+    setNouvelleLigne(nouvelleLigne);
+
+    createMutation.mutate(nouvelleLigne);
+
+    setNouvelleLigne(nouvelleLigne);
+    setShowPanier(true);
+  };
+
+  /*   const handleAdd = () => {
+    updateMutation.mutate(
+      {
+        ...ligne,
+        order: {
+          id: order.id,
+        },
+        version,
+      },
+      {
+        onSuccess: () => onSuccess && onSuccess(),
+      }
+    );
+    setShowPanier(true);
+  }; */
   return (
     <div className={`${styles.recipeCard}`}>
       <div className={`${styles.imageContainer} position-relative`}>
@@ -50,11 +88,11 @@ function Recipe({ vote, item, onRate }) {
           {vote && <StarRatingVote rating={item.rate} onRate={handleRate} />}
           {!vote && <StarRating rating={item.rate} reviews={item.nbRate} />}
         </div>
-        <button className="m-3 px-2" onClick={() => setShowPanier(true)}>
+        <button className="m-3 px-2" onClick={handleAdd}>
           <i className="fa-solid fa-cart-shopping fa fa-2x"></i>
           <i className="fa-solid fa-plus fa fa-xs"></i>
         </button>
-        {showPanier && (
+        {/*         {showPanier && (
           <GenericModal
             show={showPanier}
             showHeader={true}
@@ -66,6 +104,17 @@ function Recipe({ vote, item, onRate }) {
               client={customer}
               nouvelleLigne={{ quantity: 1, line_price: item.price, item }}
             />
+          </GenericModal>
+        )} */}
+        {showPanier && nouvelleLigne && (
+          <GenericModal
+            show={showPanier}
+            showHeader={true}
+            onClose={() => setShowPanier(false)}
+            title="Mon panier"
+            placement="start"
+          >
+            <Basket client={customer} nouvelleLigne={nouvelleLigne} />
           </GenericModal>
         )}
       </div>
