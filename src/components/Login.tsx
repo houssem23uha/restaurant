@@ -11,6 +11,7 @@ function Login() {
   const [errorMsg, setErrorMsg] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [photoFilename, setPhotoFilename] = useState<string | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const navigate = useNavigate();
   const { setCustomer, setPhoto } = useCustomer();
@@ -22,11 +23,20 @@ function Login() {
   } = useLoadPhoto(photoFilename || undefined);
 
   useEffect(() => {
-    if (isPhotoLoaded && photoBase64) {
-      setPhoto(photoBase64);
-      navigate("/");
-    }
-  }, [isPhotoLoaded, photoBase64, setPhoto, navigate]);
+  if (!isLoggedIn) return;
+
+  if (!photoFilename) {
+    // Pas de photo => on navigue directement
+    navigate("/");
+  } else if (isPhotoLoaded && photoBase64) {
+    // Photo chargée => on la stocke et on navigue
+    setPhoto(photoBase64);
+    navigate("/");
+  } else if (photoFilename && isPhotoLoaded && !photoBase64) {
+    // Photo introuvable (erreur serveur ou image manquante)
+    navigate("/");
+  }
+}, [isLoggedIn, photoFilename, isPhotoLoaded, photoBase64, setPhoto, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,9 +46,11 @@ function Login() {
         { login: email, password  : password },
         {
           onSuccess: (customer) => {
+            console.log("Customer connecté :", customer);
             localStorage.setItem("customer", JSON.stringify(customer));
             setCustomer(customer);
             setPhotoFilename(customer.photo);
+            setIsLoggedIn(true); // Marque la connexion réussie
           },
           onError: () => {
             setErrorMsg("Email ou mot de passe invalide.");
