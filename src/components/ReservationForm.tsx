@@ -1,20 +1,24 @@
 import { useState, useEffect } from "react";
 import styles from "./ReservationForm.module.scss";
-import InlineCalendar from "./InlineCalendar.tsx";
+import InlineCalendar from "./InlineCalendar";
 
 import { useCustomer } from "./CustomerContext";
 
 import type { Slot, Reservation } from "./types";
-import {useCreateReservation} from "./hooks/reservation/useReservationMutations.ts";
+import { useCreateReservation } from "./hooks/reservation/useReservationMutations";
 
 const HOURS: Slot[] = ["MORNING", "AFTERNOON", "EVENING"];
 
 const slotToLabel = (slot: Slot) => {
   switch (slot) {
-    case "MORNING": return "Matin";
-    case "AFTERNOON": return "Midi";
-    case "EVENING": return "Soir";
-    default: return slot;
+    case "MORNING":
+      return "Matin";
+    case "AFTERNOON":
+      return "Midi";
+    case "EVENING":
+      return "Soir";
+    default:
+      return slot;
   }
 };
 
@@ -66,17 +70,19 @@ const ReservationForm = () => {
       slot: selectedTime,
       nbPersons: covers,
       date,
-      customer, // 👈 client connecté ici
+      customer,
       version: 0,
     };
 
     createMutation.mutate(newReservation as Reservation, {
       onSuccess: () => {
         setSuccessMessage(
-            `${customer.firstname+customer.lastname.toUpperCase()}: Réservation confirmée pour ${covers} personnes le ${new Date(date).toLocaleDateString(
-                "fr-FR",
-                { weekday: "long", day: "numeric", month: "long" }
-            )} (${slotToLabel(selectedTime)})`
+            `${customer.firstname} ${customer.lastname.toUpperCase()}: Réservation confirmée pour ${covers} personne${covers > 1 ? "s" : ""
+            } le ${new Date(date).toLocaleDateString("fr-FR", {
+              weekday: "long",
+              day: "numeric",
+              month: "long",
+            })} (${slotToLabel(selectedTime)})`
         );
         setCovers(2);
         setSelectedTime("");
@@ -93,11 +99,11 @@ const ReservationForm = () => {
   };
 
   return (
-      <div className={styles.formContainer}>
+      <div className={styles.formContainer} d-flex flex-column justify-content-center align-items-center gap-3 p-3>
         <form className={styles.reservationForm} onSubmit={handleSubmit} noValidate>
-          <h2>Le Cercle</h2>
+          <h2>Réserver une table</h2>
 
-          {/* COUVERTS */}
+          {/* Couverts */}
           <label
               tabIndex={0}
               role="button"
@@ -107,8 +113,7 @@ const ReservationForm = () => {
               aria-controls="covers-selection"
               className={styles.toggleLabel}
           >
-            <i className="fa-solid fa-utensils" />
-            <strong>Couverts</strong>{" "}
+            <span>Couverts :</span>
             <span className={styles.selectedValue}>{covers}</span>
           </label>
 
@@ -123,22 +128,22 @@ const ReservationForm = () => {
                   onClick={() => setCovers((c) => Math.max(1, c - 1))}
                   aria-label="Diminuer le nombre de couverts"
               >
-                <i className="fa-solid fa-minus" />
+                −
               </button>
-              <span className={styles.inputValueContainer}>{covers}</span>
+              <span className={styles.inputValue}>{covers}</span>
               <button
                   type="button"
                   onClick={() => setCovers((c) => c + 1)}
                   aria-label="Augmenter le nombre de couverts"
               >
-                <i className="fa-solid fa-plus" />
+                +
               </button>
             </div>
           </div>
 
           <hr />
 
-          {/* DATE */}
+          {/* Date */}
           <label
               tabIndex={0}
               role="button"
@@ -148,7 +153,7 @@ const ReservationForm = () => {
               aria-controls="date-selection"
               className={styles.toggleLabel}
           >
-            <strong>Date</strong>{" "}
+            <span>Date :</span>
             <span className={styles.selectedValue}>
             {date &&
                 new Date(date).toLocaleDateString("fr-FR", {
@@ -164,7 +169,7 @@ const ReservationForm = () => {
               className={`${styles.toggleSection} ${isActive("date") ? styles.active : ""}`}
               aria-hidden={!isActive("date")}
           >
-            <div className={styles.dateWrapper}>
+            <div className={styles.calendarWrapper}>
               <InlineCalendar
                   selected={date ? new Date(date + "T00:00:00") : undefined}
                   onSelect={(d) => {
@@ -181,7 +186,7 @@ const ReservationForm = () => {
 
           <hr />
 
-          {/* HORAIRE */}
+          {/* Horaire */}
           <label
               tabIndex={0}
               role="button"
@@ -191,7 +196,7 @@ const ReservationForm = () => {
               aria-controls="time-selection"
               className={styles.toggleLabel}
           >
-            <strong>Horaire</strong>{" "}
+            <span>Horaire :</span>
             <span className={styles.selectedValue}>
             {selectedTime ? slotToLabel(selectedTime as Slot) : ""}
           </span>
@@ -218,22 +223,17 @@ const ReservationForm = () => {
             </ul>
           </div>
 
-          <button type="submit" disabled={!selectedTime || createMutation.isPending} className={styles.submitButton}>
-            {createMutation.isPending ? "Envoi..." : "Réserver"}
+          <button
+              type="submit"
+              disabled={!selectedTime || createMutation.status === "pending"}
+              className={styles.submitButton}
+              aria-live="polite"
+          >
+            {createMutation.status === "pending" ? "Envoi..." : "Réserver"}
           </button>
 
-            {successMessage && (
-                <p className={styles.successMessage}>
-                    {successMessage}
-                </p>
-            )}
-
-            {error && (
-                <p className={styles.errorMessageBottom}>
-                    {error}
-                </p>
-            )}
-
+          {successMessage && <p className={styles.successMessage}>{successMessage}</p>}
+          {error && <p className={styles.errorMessage}>{error}</p>}
         </form>
       </div>
   );

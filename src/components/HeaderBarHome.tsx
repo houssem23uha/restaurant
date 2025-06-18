@@ -42,7 +42,12 @@
           <img
               src={logo}
               alt="Logo"
-              style={{ maxWidth: '5%', maxHeight: '5%' }}
+              onClick={() => navigate('/')}
+              style={{
+                maxWidth: '5%',
+                maxHeight: '5%',
+                cursor: 'pointer' // important pour indiquer que c’est cliquable
+              }}
           />
 
 
