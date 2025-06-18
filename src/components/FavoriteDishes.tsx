@@ -11,70 +11,6 @@ function FavoriteDishes() {
   const { data: items, isLoading, error } = useItems();
   const { customer, setCustomer } = useCustomer(); // 🔥 1. Accès au customer
   const [filter, setFilter] = useState<string>("");
-<<<<<<< Updated upstream
-  const onSuccess = (ref) => {
-    setLocalItems((prevItems) =>
-      prevItems.map((item) =>
-        item.ref === ref ? { ...item, version: item.version + 1 } : item
-      )
-    );
-  };
-
-  useEffect(() => {
-    if (items) {
-      setLocalItems(items);
-    }
-  }, [items]);
-
-  const updateMutation = useUpdateItem();
-
-  const handleRate = (updatedItem: Item) => {
-    setLocalItems((prevItems) =>
-      prevItems.map((item) =>
-        item.ref === updatedItem.ref
-          ? { ...item, rate: updatedItem.rate }
-          : item
-      )
-    );
-    updateMutation.mutate(updatedItem, {
-      onSuccess: () => onSuccess && onSuccess(updatedItem.ref),
-    });
-  };
-
-  if (isLoading) return <p>Chargement...</p>;
-  if (error instanceof Error) return <p>Erreur : {error.message}</p>;
-
-  // Appliquer le filtre (ex: par catégorie, type, etc.)
-  const filteredItems = filter
-    ? localItems.filter((item) => item.category === filter) // adapte ce champ
-    : items;
-
-  return (
-    <>
-      <div className={`${styles.MenuContent}`}>
-        <div
-          className={`${styles.MenuTitle} page-title d-flex justify-content-center mb-3`}
-        >
-          <h1>Plats favoris</h1>
-        </div>
-
-        <div className="row d-flex flex-column gap-3 mb-3">
-          <SliderTabs onFilterChange={setFilter} />
-        </div>
-
-        <div className="grid my-5">
-          {filteredItems.map((item) => (
-            <Recipe
-              key={item.ref}
-              vote={true}
-              item={item}
-              onRate={handleRate}
-            />
-          ))}
-        </div>
-      </div>
-    </>
-=======
 
   const updateFavorites = useUpdateCustomerFavorites();
 
@@ -131,7 +67,6 @@ function FavoriteDishes() {
         </div>
       )}
     </div>
->>>>>>> Stashed changes
   );
 }
 

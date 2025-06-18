@@ -57,7 +57,7 @@ function Recipe({ vote, item, onRate, onToggleFavorite, isFavorite }) {
 
         <img
           className="z-0"
-          src={`../assets/images/${item.name}.jpg`}
+          src={`public/assets/images/items/${item.pathImg}.png`}
           alt={item.name}
           onError={(e) => {
             const target = e.target as HTMLImageElement;
