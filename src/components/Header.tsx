@@ -1,38 +1,16 @@
-import {useEffect, useState} from "react";
+import { useState } from "react";
 import styles from "./Header.module.scss";
 import MenuModal from "./MenuModal";
 import GenericModal from "./GenericModal";
 import Basket from "./Basket";
-import { useCustomerswithOrdersLines } from "./hooks/customers/useCustomers";
 import HeaderBar from "./HeaderBar.tsx";
-/* import { useCustomerswithOrdersLines } from "./hooks/customers/useCustomers";
- */ /* import MenuModal from "./MenuModal";
- */
-
-/* function getFirstIncompleteOrder(customer: Customer): Order | null {
-  // On cherche la première commande avec le status "INCOMPLET"
-  const order = customer.orders.find((o) => o.status === "INCOMPLETE");
-  return order || null;
-}
- */
+import { useCustomer } from "./CustomerContext.tsx";
 
 function Header() {
+  const { customer } = useCustomer();
 
   const [showModal, setModalOpen] = useState(false);
   const [showPanier, setShowPanier] = useState(false);
-  const [customer, setCustomer] = useState(null);
-
-  const { data: customers, isLoading, error } = useCustomerswithOrdersLines();
-
-  useEffect(() => {
-    if (customers && customers.length > 0) {
-      const cust = customers.find((c) => c.id === 1) || null;
-      setCustomer(cust);
-    }
-  }, [customers]);
-
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error loading customers.</div>;
 
   return (
     <div className={`${styles.header} d-flex flex-column mb-3`}>
@@ -77,7 +55,7 @@ function Header() {
         <div className="row">
           <div className="col">
             <ul
-                className={`${styles.headerNavItem} d-flex flex-row justify-content-center align-items-center ms-3 me-3 gap-4`}
+              className={`${styles.headerNavItem} d-flex flex-row justify-content-center align-items-center ms-3 me-3 gap-4`}
             >
               <span className="separatorSecondary"></span>
 
@@ -89,27 +67,27 @@ function Header() {
               </li>
               <span className="separatorSecondary"></span>
 
-            <li>
-              <a href="#" onClick={() => setShowPanier(true)}>
-                <i className="fa-solid fa-basket-shopping fa-lg me-2"></i>
-                Panier
-              </a>
-              {showPanier && (
-                <GenericModal
-                  show={showPanier}
-                  showHeader={true}
-                  onClose={() => setShowPanier(false)}
-                  title="Mon panier"
-                  placement="start"
-                >
-                  <Basket client={customer} />
-                </GenericModal>
-              )}
-            </li>
-          </ul>
+              <li>
+                <a href="#" onClick={() => setShowPanier(true)}>
+                  <i className="fa-solid fa-basket-shopping fa-lg me-2"></i>
+                  Panier
+                </a>
+                {showPanier && (
+                  <GenericModal
+                    show={showPanier}
+                    showHeader={true}
+                    onClose={() => setShowPanier(false)}
+                    title="Mon panier"
+                    placement="start"
+                  >
+                    <Basket client={customer} />
+                  </GenericModal>
+                )}
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
-    </div>
     </div>
   );
 }
