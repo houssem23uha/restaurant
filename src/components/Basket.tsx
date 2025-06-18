@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import styles from "./Basket.module.scss";
 import BasketPreviewItem from "./BasketPreviewItem";
-import { useCustomer } from "./CustomerContext";
-
+import { useNavigate } from "react-router-dom";
 import { toStringAdresse } from "./types";
 import GenericModal from "./GenericModal";
 import SearchItem from "./SearchItem";
@@ -35,16 +34,19 @@ function ajouterOuCumulerOrderLine(order, nouvelleLigne) {
 }
 
 function Basket({ client, nouvelleLigne = null }) {
+  const navigate = useNavigate();
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState(
+    client?.addresses?.[0]
+  );
+
   const createOrderMutation = useCreateOrder();
   const updateOrderMutation = useUpdateOrder();
 
   const [isCreatingOrder, setIsCreatingOrder] = useState(false);
 
   const [showItems, setShowItems] = useState(false);
-  /*   const [order, setOrder] = useState(null);
-   */ const [totalPrice, setTotalPrice] = useState(0);
-
-  console.log("client", client);
+  const [totalPrice, setTotalPrice] = useState(0);
 
   const {
     data: customer,
@@ -56,19 +58,9 @@ function Basket({ client, nouvelleLigne = null }) {
   const [orderData, setOrderData] = useState(getFirstIncompleteOrder(customer));
   const updateLineMutation = useUpdateOrderLine(); // hook mutation de ligne
 
-  /*   const [memoNouvelleLigne, setMemoNouvelleLigne] = useState(null);
-   */
-  /*   useEffect(() => {
-    if (nouvelleLigne && nouvelleLigne.id !== memoNouvelleLigne?.id) {
-      setMemoNouvelleLigne(nouvelleLigne);
-    }
-  }, [nouvelleLigne]); */
-
   const [ligneMajEnBase, setLigneMajEnBase] = useState(false);
 
   useEffect(() => {
-    console.log("je rentre", orderData, nouvelleLigne);
-
     if (
       orderData &&
       nouvelleLigne &&
@@ -83,7 +75,6 @@ function Basket({ client, nouvelleLigne = null }) {
 
       updateLineMutation.mutate(ligneAvecOrder, {
         onSuccess: () => {
-          console.log("Ligne mise à jour avec succès");
           setLigneMajEnBase(true);
           refetch();
         },
@@ -92,10 +83,7 @@ function Basket({ client, nouvelleLigne = null }) {
         },
       });
     }
-    console.log("je sors", orderData, nouvelleLigne, ligneMajEnBase);
   }, [orderData, nouvelleLigne, ligneMajEnBase]);
-
-  console.log("costo", customer);
 
   useEffect(() => {
     const initializeOrder = async () => {
@@ -133,6 +121,11 @@ function Basket({ client, nouvelleLigne = null }) {
 
     initializeOrder();
   }, [customer, nouvelleLigne]);
+  useEffect(() => {
+    if (customer?.addresses?.length > 0) {
+      setSelectedAddress(customer.addresses[0]);
+    }
+  }, [client]);
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
@@ -165,6 +158,19 @@ function Basket({ client, nouvelleLigne = null }) {
 
     setOrderData(null);
     setTotalPrice(0);
+
+    navigate("/orders");
+  };
+
+  const toStringAdresse = (address) => {
+    if (!address) return "";
+    return `${address.street}, ${address.city}, ${address.postalCode}`;
+  };
+
+  const handleChangeAdresse = (e) => {
+    const index = parseInt(e.target.value, 10);
+    setSelectedAddress(customer.addresses[index]);
+    setShowDropdown(false); // cacher la liste après sélection
   };
 
   return (
@@ -172,17 +178,39 @@ function Basket({ client, nouvelleLigne = null }) {
       className={`${styles.PanierComponent} flex-fill row d-flex flex-column`}
     >
       <div
-        className={`${styles.ShippingAddress} col-auto d-flex justify-content-between align-items-center mb-3 `}
+        className={`${styles.ShippingAddress} col-auto d-flex flex-column mb-3`}
       >
-        <span>{toStringAdresse(customer?.addresses?.[0])}</span>
-
-        <button className="d-flex align-items-center">
-          <i className="fa-solid fa-arrows-rotate me-1"></i>
-          <span>Changer</span>
-        </button>
+        {!showDropdown ? (
+          <div className="d-flex justify-content-between align-items-center w-100">
+            <span>{toStringAdresse(selectedAddress)}</span>
+            <button
+              type="button"
+              className="d-flex align-items-center"
+              onClick={() => setShowDropdown(true)}
+            >
+              <i className="fa-solid fa-arrows-rotate me-1"></i>
+              <span>Changer</span>
+            </button>
+          </div>
+        ) : (
+          <select
+            className="form-select mt-2"
+            onChange={handleChangeAdresse}
+            value={customer.addresses.indexOf(selectedAddress)}
+            onBlur={() => setShowDropdown(false)} // optionnel pour fermer la liste si click à l’extérieur
+            autoFocus
+          >
+            {customer.addresses.map((addr, index) => (
+              <option key={index} value={index}>
+                {toStringAdresse(addr)}
+              </option>
+            ))}
+          </select>
+        )}
       </div>
+
       <div
-        className={`${styles.Content} col content flex-fil d-flex flex-column justify-content-center`}
+        className={`${styles.Content} col content flex-fill d-flex flex-column justify-content-center`}
       >
         <div
           className={`${styles.AdditionCard} d-flex flex-column justify-content-center align-items-center mb-3 gap-3`}
@@ -204,25 +232,22 @@ function Basket({ client, nouvelleLigne = null }) {
             title="Ajouter un produit"
             placement="start"
           >
-            <SearchItem order={orderData} />
+            <SearchItem
+              order={orderData}
+              onOrderDataChange={setOrderData}
+              onClose={() => setShowItems(false)}
+            />
           </GenericModal>
         )}
         <div
           className={`${styles.Order}  basket-list flex-fill  d-flex flex-column mb-3`}
         >
-          {(!firstOrder ||
-            !firstOrder.order_lines ||
-            firstOrder.order_lines.length === 0) && (
-            <p>Vous n'avez pas encore sélectionné de repas.</p>
-          )}
-
           {(!orderData ||
             !orderData.order_lines ||
             orderData.order_lines.length === 0) && (
             <p>Vous n'avez pas encore sélectionné de repas.</p>
           )}
-
-          <div className={`${styles.BasketList}`}>
+          <div className={`${styles.BasketList} `}>
             {orderData &&
               orderData.order_lines &&
               orderData?.order_lines?.map((orderLine, index) =>
@@ -234,6 +259,7 @@ function Basket({ client, nouvelleLigne = null }) {
                     ligne={orderLine}
                     onLineChange={handleUpdate}
                     onLineDelete={handleDelete}
+                    setOrderChange={() => {}}
                   />
                 ) : null
               )}

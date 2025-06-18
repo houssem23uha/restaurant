@@ -2,6 +2,7 @@ import styles from "./BasketPreviewItem.module.scss";
 import itemImage from "../assets/images/default.jpg";
 import { useState } from "react";
 import {
+  useCreateOrderLine,
   useDeleteOrderLine,
   useUpdateOrderLine,
 } from "./hooks/OrderLines.ts/OrderLinesMutation";
@@ -12,6 +13,8 @@ function BasketPreviewItem({
   ligne,
   onLineChange,
   onLineDelete,
+  setOrderChange,
+  onClose = () => {},
 }) {
   const priceItem = ligne?.item?.price;
   const [nbItem, setNbItem] = useState(ligne.quantity);
@@ -26,6 +29,7 @@ function BasketPreviewItem({
 
   const updateMutation = useUpdateOrderLine();
   const deleteMutation = useDeleteOrderLine();
+  const createMutation = useCreateOrderLine();
 
   const handleAdd = () => {
     updateMutation.mutate(
@@ -73,7 +77,23 @@ function BasketPreviewItem({
     onLineDelete(ligne.id);
   };
 
-  const handleAddToCart = () => {};
+  const handleAddToCart = () => {
+    console.log("ligne", ligne);
+    console.log("orser", order);
+    const ligneAvecOrder = {
+      ...ligne,
+      orderId: order.id, // ou "order_id" selon votre back-end
+    };
+
+    console.log("ligneAvecOrder", ligneAvecOrder);
+
+    setOrderChange({ ...order, order_lines: [ligneAvecOrder] });
+    createMutation.mutate(ligneAvecOrder, {
+      onSuccess: () => {
+        if (onClose) onClose();
+      },
+    });
+  };
 
   const addItem = () => {
     setNbItem(nbItem + 1);
@@ -139,22 +159,25 @@ function BasketPreviewItem({
           </button>
         </div>
       </div>
-      <div
-        className={`${styles.PriceAndAction} d-flex justify-content-between align-item-center`}
-      >
-        <span>{priceLine} €</span>
+
+      {!isSearchComponent && (
         <div
-          className={`${styles.CounterInput} d-flex flex-row justify-content-center align-item-center gap-2`}
+          className={`${styles.PriceAndAction} d-flex justify-content-between align-item-center`}
         >
-          <button onClick={() => removeItem()}>
-            <i className="fa-solid fa-minus"></i>
-          </button>
-          <span className="InputValueContainer">{ligne.quantity}</span>
-          <button onClick={() => addItem()}>
-            <i className="fa-solid fa-plus"></i>
-          </button>
+          <span>{priceLine} €</span>
+          <div
+            className={`${styles.CounterInput} d-flex flex-row justify-content-center align-item-center gap-2`}
+          >
+            <button onClick={() => removeItem()}>
+              <i className="fa-solid fa-minus"></i>
+            </button>
+            <span className="InputValueContainer">{ligne.quantity}</span>
+            <button onClick={() => addItem()}>
+              <i className="fa-solid fa-plus"></i>
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

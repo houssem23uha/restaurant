@@ -9,10 +9,7 @@ import Basket from "./Basket";
 import { useState } from "react";
 import { useCustomer } from "./CustomerContext";
 
-import {
-  use,
-  useCreateOrderLine,
-} from "./hooks/OrderLines.ts/OrderLinesMutation";
+import { useCreateOrderLine } from "./hooks/OrderLines.ts/OrderLinesMutation";
 
 function Recipe({ vote, item, onRate }) {
   const [nouvelleLigne, setNouvelleLigne] = useState(null);
@@ -42,21 +39,6 @@ function Recipe({ vote, item, onRate }) {
     setShowPanier(true);
   };
 
-  /*   const handleAdd = () => {
-    updateMutation.mutate(
-      {
-        ...ligne,
-        order: {
-          id: order.id,
-        },
-        version,
-      },
-      {
-        onSuccess: () => onSuccess && onSuccess(),
-      }
-    );
-    setShowPanier(true);
-  }; */
   return (
     <div className={`${styles.recipeCard}`}>
       <div className={`${styles.imageContainer} position-relative`}>
@@ -92,20 +74,6 @@ function Recipe({ vote, item, onRate }) {
           <i className="fa-solid fa-cart-shopping fa fa-2x"></i>
           <i className="fa-solid fa-plus fa fa-xs"></i>
         </button>
-        {/*         {showPanier && (
-          <GenericModal
-            show={showPanier}
-            showHeader={true}
-            onClose={() => setShowPanier(false)}
-            title="Mon panier"
-            placement="start"
-          >
-            <Basket
-              client={customer}
-              nouvelleLigne={{ quantity: 1, line_price: item.price, item }}
-            />
-          </GenericModal>
-        )} */}
         {showPanier && nouvelleLigne && (
           <GenericModal
             show={showPanier}

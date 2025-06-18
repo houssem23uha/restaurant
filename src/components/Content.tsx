@@ -1,4 +1,4 @@
-import {Route, Routes} from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Menu from "./Menu";
 import HomeContent from "./HomeContent";
 import FavoriteDishes from "./FavoriteDishes";
@@ -17,50 +17,65 @@ import ReservationComponent from "./ReservationComponent.tsx";
 import CustomerReservations from "./CustomerReservations.tsx";
 
 function Content() {
-    return (
+  const location = useLocation();
+  const noLayoutRoutes = ["/reservation", "/account", "/register", "/login"];
+  const isNoLayout = noLayoutRoutes.includes(location.pathname);
+
+  return (
+    <>
+      {isNoLayout ? (
+        <Routes>
+          {/* Réservations */}
+          <Route path="/reservation" element={<ReservationComponent />} />
+
+          {/* Compte utilisateur */}
+          <Route path="/account" element={<Account />} />
+
+          {/* Authentification */}
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+        </Routes>
+      ) : (
         <div className={`${styles.appContainer} d-flex flex flex-column`}>
-            <div className={`${styles.content} container flex-fill mt-2 p-4`}>
-                <Routes>
-                    <Route path="/" element={<HomeContent />} />
+          <div className={`${styles.content} container flex-fill mt-2 p-4`}>
+            <Routes>
+              <Route path="/" element={<HomeContent />} />
 
-                    {/* Items */}
-                    <Route path="/liste" element={<ItemsList />} />
-                    <Route path="/ItemsList" element={<ItemsList />} /> {/* Garde seulement un des deux idéalement */}
-                    <Route path="/ItemDetails/:id" element={<ItemDetails />} />
-                    <Route path="/ItemForm" element={<ItemForm />} />
-                    <Route path="/ItemFormUpdate/:id" element={<ItemFormUpdate />} />
+              {/* Items */}
+              <Route path="/liste" element={<ItemsList />} />
+              <Route path="/ItemsList" element={<ItemsList />} />
+              <Route path="/ItemDetails/:id" element={<ItemDetails />} />
+              <Route path="/ItemForm" element={<ItemForm />} />
+              <Route path="/ItemFormUpdate/:id" element={<ItemFormUpdate />} />
 
-                    {/* Menu & Carte */}
-                    <Route path="/menu" element={<Menu />} />
-                    <Route path="/menu/items" element={<HomeContent />} />
-                    <Route path="/carte" element={<Carte />} />
+              {/* Menu & Carte */}
+              <Route path="/menu" element={<Menu />} />
+              <Route path="/menu/items" element={<HomeContent />} />
+              <Route path="/carte" element={<Carte />} />
 
-                    {/* Commandes */}
-                    <Route path="/orders" element={<OrderList />} />
-                    <Route path="/orders/history" element={<HomeContent />} />
+              {/* Commandes */}
+              <Route path="/orders" element={<OrderList />} />
+              <Route path="/orders/history" element={<HomeContent />} />
 
-                    {/* Réservations */}
-                    <Route path="/reservation" element={<ReservationComponent />} />
-                    <Route path="/mesreservations" element={<CustomerReservations />} />
+              {/* Informations complémentaires */}
+              <Route path="/delivery-info" element={<HomeContent />} />
+              <Route path="/contact" element={<HomeContent />} />
 
-                    {/* Compte utilisateur */}
-                    <Route path="/account" element={<Account />} />
-                    <Route path="/account/favoris" element={<FavoriteDishes />} />
-                    <Route path="/account/orders" element={<HomeContent />} />
-                    <Route path="/account/settings" element={<HomeContent />} />
+              {/* Compte utilisateur */}
+              <Route path="/account/favoris" element={<FavoriteDishes />} />
+              <Route path="/account/orders" element={<HomeContent />} />
+              <Route path="/account/settings" element={<HomeContent />} />
 
-                    {/* Informations complémentaires */}
-                    <Route path="/delivery-info" element={<HomeContent />} />
-                    <Route path="/contact" element={<HomeContent />} />
-
-                    {/* Authentification */}
-                    <Route path="/register" element={<Register />} />
-                    <Route path="/login" element={<Login />} />
-
-                </Routes>
-            </div>
+              <Route
+                path="/mesreservations"
+                element={<CustomerReservations />}
+              />
+            </Routes>
+          </div>
         </div>
-    );
+      )}
+    </>
+  );
 }
 
 export default Content;

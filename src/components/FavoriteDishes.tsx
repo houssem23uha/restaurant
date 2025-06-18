@@ -12,9 +12,9 @@ function FavoriteDishes() {
   const [filter, setFilter] = useState<string>("");
   const onSuccess = (ref) => {
     setLocalItems((prevItems) =>
-        prevItems.map((item) =>
-            item.ref === ref ? { ...item, version: item.version + 1 } : item
-        )
+      prevItems.map((item) =>
+        item.ref === ref ? { ...item, version: item.version + 1 } : item
+      )
     );
   };
 
@@ -28,11 +28,11 @@ function FavoriteDishes() {
 
   const handleRate = (updatedItem: Item) => {
     setLocalItems((prevItems) =>
-        prevItems.map((item) =>
-            item.ref === updatedItem.ref
-                ? { ...item, rate: updatedItem.rate }
-                : item
-        )
+      prevItems.map((item) =>
+        item.ref === updatedItem.ref
+          ? { ...item, rate: updatedItem.rate }
+          : item
+      )
     );
     updateMutation.mutate(updatedItem, {
       onSuccess: () => onSuccess && onSuccess(updatedItem.ref),
@@ -44,40 +44,34 @@ function FavoriteDishes() {
 
   // Appliquer le filtre (ex: par catégorie, type, etc.)
   const filteredItems = filter
-      ? localItems.filter((item) => item.category === filter) // adapte ce champ
-      : items;
+    ? localItems.filter((item) => item.category === filter) // adapte ce champ
+    : items;
 
   return (
-      <>
-        {filteredItems?.map((item: Item, index) => (
-            <li key={index}>
-              Name: {item.name}, Rate: {item.rate}, Number of Rates: {item.nbRate},
-              Version: {item.version}
-            </li>
-        ))}
-        <div className={`${styles.MenuContent}`}>
-          <div
-              className={`${styles.MenuTitle} page-title d-flex justify-content-center mb-3`}
-          >
-            <h1>Plats favoris</h1>
-          </div>
-
-          <div className="row d-flex flex-column gap-3 mb-3">
-            <SliderTabs onFilterChange={setFilter} />
-          </div>
-
-          <div className="grid my-5">
-            {filteredItems.map((item) => (
-                <Recipe
-                    key={item.ref}
-                    vote={true}
-                    item={item}
-                    onRate={handleRate}
-                />
-            ))}
-          </div>
+    <>
+      <div className={`${styles.MenuContent}`}>
+        <div
+          className={`${styles.MenuTitle} page-title d-flex justify-content-center mb-3`}
+        >
+          <h1>Plats favoris</h1>
         </div>
-      </>
+
+        <div className="row d-flex flex-column gap-3 mb-3">
+          <SliderTabs onFilterChange={setFilter} />
+        </div>
+
+        <div className="grid my-5">
+          {filteredItems.map((item) => (
+            <Recipe
+              key={item.ref}
+              vote={true}
+              item={item}
+              onRate={handleRate}
+            />
+          ))}
+        </div>
+      </div>
+    </>
   );
 }
 

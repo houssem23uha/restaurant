@@ -1,49 +1,20 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import styles from "./SearchItem.module.scss";
 import { useItems } from "./hooks/items/useItems";
 import BasketPreviewItem from "./BasketPreviewItem";
-import SliderTabs from "./SliderTabs";
 
-const tabsData = ["Entree", "Plat", "Dessert", "Boisson"];
-
-function SearchItem({ order }) {
+function SearchItem({ order, setOrderDataChange, onClose }) {
   const { data: items, isLoading, error } = useItems();
-  const [filterName, setFilterName] = useState<string>("");
 
   const [filter, setFilter] = useState<string>("");
-  const [activeIndex, setActiveIndex] = useState(0);
-  const tabsRef = useRef([]);
-  const sliderRef = useRef(null);
-  const [totalPrice, setTotalPrice] = useState(0);
-
-  useEffect(() => {
-    const activeTab = tabsRef.current[activeIndex];
-    if (activeTab && sliderRef.current) {
-      sliderRef.current.style.width = `${activeTab.offsetWidth}px`;
-      sliderRef.current.style.left = `${activeTab.offsetLeft}px`;
-    }
-  }, [activeIndex]);
 
   if (isLoading) return <p>Chargement...</p>;
   if (error instanceof Error) return <p>Erreur : {error.message}</p>;
 
   // Appliquer le filtre (ex: par catégorie, type, etc.)
-  /*   const filteredItems = filter
-    ? items.filter((item) => item.category === filter) // adapte ce champ
-    : items; */
-
-  const filteredItems = items.filter((item) => {
-    const matchesName = item.name
-      .toLowerCase()
-      .includes(filterName.toLowerCase());
-    console.log(item.name);
-    console.log(item.category);
-    const matchesCategory = filter ? item.category === filter : true;
-
-    return matchesName || matchesCategory;
-  });
-
-  console.log("filteredItems", filteredItems); // Debug
+  const filteredItems = items.filter((item) =>
+    item.name.toLowerCase().includes(filter.toLowerCase())
+  );
 
   return (
     <div className={`${styles.SearchItem} flex-fill row d-flex flex-column`}>
@@ -57,17 +28,10 @@ function SearchItem({ order }) {
               type="text"
               placeholder="Un plat, un dessert..."
               className="flex-fill"
-              value={filterName}
-              onChange={(e) => setFilterName(e.target.value)}
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
             />
           </form>
-        </div>
-
-        <div
-          className={`${styles.SliderTabs} d-flex justify-content-center align-items-center gap-2`}
-        >
-          <SliderTabs onFilterChange={setFilter} />
-          <div className={`${styles.Slider} flex-grow-1`} ref={sliderRef} />
         </div>
       </div>
       <div
@@ -76,16 +40,20 @@ function SearchItem({ order }) {
         <div
           className={`${styles.Order}  basket-list flex-fill  d-flex flex-column mb-3`}
         >
-          {/*           <p>Vous n'avez pas encore sélectionné de repas.</p>
-           */}
+          {(!filteredItems || filteredItems.length === 0) && (
+            <p>Aucun plat ne correspond à vos critères de recherche.</p>
+          )}
+
           <div className={`${styles.BasketList}`}>
             {filteredItems.map((item) => (
               <BasketPreviewItem
                 isSearchComponent={true}
-                order={{ order }}
+                order={order}
                 ligne={{ quantity: 1, line_price: item.price, item }}
                 onLineChange={() => {}}
                 onLineDelete={() => {}}
+                setOrderChange={() => setOrderDataChange}
+                onClose={onClose}
               />
             ))}
           </div>
