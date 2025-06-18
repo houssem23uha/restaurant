@@ -11,7 +11,7 @@ import { useCustomerswithOrdersLines } from "./hooks/customers/useCustomers";
 
 function HeaderBarHome() {
 
-  const [showModal, setModalOpen] = useState(false);
+
   const [showPanier, setShowPanier] = useState(false);
    
   const navigate = useNavigate();
@@ -20,7 +20,7 @@ function HeaderBarHome() {
 
     // Hook pour récupérer les clients avec leurs lignes de commande
     // const { data: customers, isLoading, error } = useCustomerswithOrdersLines();
-  const { data: customers, isLoading, error } = useCustomerswithOrdersLines();
+  const { data: customers } = useCustomerswithOrdersLines();
 
     useEffect(() => {
       if (customers && customers.length > 0) {
