@@ -79,7 +79,7 @@ function BasketPreviewItem({
     ligne.line_price += priceItem;
     setPriceLine(ligne.line_price);
     order.totalPrice += priceItem;
-    order.order_lines = order.order_lines.map((line) =>
+    order.order_lines = order?.order_lines?.map((line) =>
       line.id === ligne.id ? ligne : line
     );
     onLineChange();
@@ -93,7 +93,7 @@ function BasketPreviewItem({
       ligne.line_price -= priceItem;
       setPriceLine(ligne.line_price);
       order.totalPrice -= priceItem;
-      order.order_lines = order.order_lines.map((line) =>
+      order.order_lines = order?.order_lines?.map((line) =>
         line.id === ligne.id ? ligne : line
       );
       onLineChange();
@@ -111,7 +111,7 @@ function BasketPreviewItem({
           className={`${styles.InfosAndAction} flex-fill d-flex justify-item-center align-items-center gap-3`}
         >
           <div className={`${styles.Infos} flex-fill d-flex flex-column gap-2`}>
-            <span>Fromage blanc nature 400g</span>
+            <span>{ligne.item.name}</span>
             <div className={`${styles.Capacity}`}>
               <span>{priceItem} €</span>
             </div>
