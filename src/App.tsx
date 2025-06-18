@@ -1,4 +1,3 @@
-
 import Footer from "./components/Footer";
 import Content from "./components/Content";
 import Accueil from "./components/Accueil";
