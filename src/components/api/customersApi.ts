@@ -1,5 +1,5 @@
 import apiClient from "../servicesh/apiClient";
-import type {Customer} from "../types";
+import type { Customer } from "../types";
 
 export const fetchConnectedCustomer = async () => {
   const response = await fetch("/customers/me", {
@@ -8,7 +8,6 @@ export const fetchConnectedCustomer = async () => {
   if (!response.ok) throw new Error("Not authenticated");
   return response.json();
 };
-
 
 export const fetchCustomers = async (): Promise<Customer[]> => {
   const res = await apiClient.get<Customer[]>("/customers");
@@ -22,6 +21,15 @@ export const fetchCustomerswithOrdersLines = async (): Promise<Customer[]> => {
 
 export const fetchCustomer = async (ref: number): Promise<Customer> => {
   const res = await apiClient.get<Customer>(`/customers/${ref}`);
+  return res.data;
+};
+
+export const fetchCustomerwithOrdersLines = async (
+  ref: number
+): Promise<Customer> => {
+  const res = await apiClient.get<Customer>(
+    `/customers/withOrdersLines/${ref}`
+  );
   return res.data;
 };
 

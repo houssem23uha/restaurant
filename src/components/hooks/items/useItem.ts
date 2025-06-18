@@ -3,7 +3,7 @@ import { fetchItem } from "../../api/itemsApi";
 
 export const useItem = (ref: number) => {
   return useQuery({
-    queryKey: ["item", ref],
+    queryKey: ["items", ref],
     queryFn: () => fetchItem(ref),
     enabled: !!ref,
   });
