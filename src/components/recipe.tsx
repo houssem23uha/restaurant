@@ -11,7 +11,7 @@ import { useCustomer } from "./CustomerContext";
 
 import { useCreateOrderLine } from "./hooks/OrderLines.ts/OrderLinesMutation";
 
-function Recipe({ vote, item, onRate }) {
+function Recipe({ vote, item, onRate, onToggleFavorite, isFavorite }) {
   const [nouvelleLigne, setNouvelleLigne] = useState(null);
   const { customer } = useCustomer();
   const [showPanier, setShowPanier] = useState(false);
@@ -42,7 +42,18 @@ function Recipe({ vote, item, onRate }) {
   return (
     <div className={`${styles.recipeCard}`}>
       <div className={`${styles.imageContainer} position-relative`}>
-        <i className="heart-circle  fa-solid fa-heart fa-2x position-absolute top-0  end-0 z-1 m-4"></i>
+       {onToggleFavorite && (
+  <button
+    className="heart-circle btn position-absolute top-0 end-0 z-1 m-4"
+    onClick={onToggleFavorite}
+    style={{ background: "transparent", border: "none" }}
+  >
+    <i
+      className={`fa-${isFavorite ? "solid" : "regular"} fa-heart fa-2x`}
+      style={{ color: isFavorite ? "red" : "#ccc" }}
+    ></i>
+  </button>
+)}
 
         <img
           className="z-0"

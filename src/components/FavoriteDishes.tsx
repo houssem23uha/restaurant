@@ -1,15 +1,17 @@
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import styles from "./Menu.module.scss";
 import { useItems } from "./hooks/items/useItems";
 import SliderTabs from "./SliderTabs";
 import Recipe from "./recipe";
 import type { Item } from "./types";
-import { useUpdateItem } from "./hooks/items/useItemMutations";
+import { useUpdateCustomerFavorites } from "./hooks/customers/useCustomerMutations";
+import { useCustomer } from "./CustomerContext";
 
 function FavoriteDishes() {
   const { data: items, isLoading, error } = useItems();
-  const [localItems, setLocalItems] = useState<Item[]>([]);
+  const { customer, setCustomer } = useCustomer(); // 🔥 1. Accès au customer
   const [filter, setFilter] = useState<string>("");
+<<<<<<< Updated upstream
   const onSuccess = (ref) => {
     setLocalItems((prevItems) =>
       prevItems.map((item) =>
@@ -72,6 +74,64 @@ function FavoriteDishes() {
         </div>
       </div>
     </>
+=======
+
+  const updateFavorites = useUpdateCustomerFavorites();
+
+  // 🔥 2. Appliquer filtre + garder que les favoris
+  const favoriteItems = items?.filter((item) =>
+    customer?.items?.some((fav) => fav.ref === item.ref)
+  );
+
+  const filteredItems = filter
+    ? favoriteItems?.filter((item) => item.category === filter)
+    : favoriteItems;
+
+  // 🔥 3. Retirer des favoris
+  const handleToggleFavorite = (item: Item) => {
+    const updatedFavorites = customer.items.filter((fav) => fav.ref !== item.ref);
+
+    updateFavorites.mutate(
+      { ...customer, items: updatedFavorites },
+      {
+        onSuccess: (updatedCustomer) => {
+          setCustomer(updatedCustomer); // Mise à jour du contexte
+        },
+      }
+    );
+  };
+
+  if (isLoading) return <p>Chargement...</p>;
+  if (error instanceof Error) return <p>Erreur : {error.message}</p>;
+
+  return (
+    <div className={styles.MenuContent}>
+      <div className={`${styles.MenuTitle} page-title d-flex justify-content-center mb-3`}>
+        <h1>Plats favoris</h1>
+      </div>
+
+      <div className="row d-flex flex-column gap-3 mb-3">
+        <SliderTabs onFilterChange={setFilter} />
+      </div>
+
+      {filteredItems?.length === 0 ? (
+        <p className="text-center">Aucun plat favori trouvé.</p>
+      ) : (
+        <div className="grid my-5">
+          {filteredItems.map((item) => (
+            <Recipe
+              key={item.ref}
+              item={item}
+              vote={true}
+              onRate={() => {}}
+              onToggleFavorite={() => handleToggleFavorite(item)} // 🔥 clique sur le coeur
+              isFavorite={true}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+>>>>>>> Stashed changes
   );
 }
 
