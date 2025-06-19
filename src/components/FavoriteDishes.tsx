@@ -9,12 +9,12 @@ import { useCustomer } from "./CustomerContext";
 
 function FavoriteDishes() {
   const { data: items, isLoading, error } = useItems();
-  const { customer, setCustomer } = useCustomer(); // 🔥 1. Accès au customer
+  const { customer, setCustomer } = useCustomer(); //  1. Accès au customer
   const [filter, setFilter] = useState<string>("");
 
   const updateFavorites = useUpdateCustomerFavorites();
 
-  // 🔥 2. Appliquer filtre + garder que les favoris
+  //  2. Appliquer filtre + garder que les favoris
   const favoriteItems = items?.filter((item) =>
     customer?.items?.some((fav) => fav.ref === item.ref)
   );
@@ -23,7 +23,7 @@ function FavoriteDishes() {
     ? favoriteItems?.filter((item) => item.category === filter)
     : favoriteItems;
 
-  // 🔥 3. Retirer des favoris
+  //  3. Retirer des favoris
   const handleToggleFavorite = (item: Item) => {
     const updatedFavorites = customer.items.filter((fav) => fav.ref !== item.ref);
 
@@ -60,7 +60,7 @@ function FavoriteDishes() {
               item={item}
               vote={true}
               onRate={() => {}}
-              onToggleFavorite={() => handleToggleFavorite(item)} // 🔥 clique sur le coeur
+              onToggleFavorite={() => handleToggleFavorite(item)} //  clique sur le coeur
               isFavorite={true}
             />
           ))}

@@ -48,7 +48,6 @@ function SearchItem({ order, setOrderDataChange, onClose }) {
             {filteredItems.map((item) => (
               <BasketPreviewItem
                 isSearchComponent={true}
-                order={order}
                 ligne={{ quantity: 1, line_price: item.price, item }}
                 onLineChange={() => {}}
                 onLineDelete={() => {}}

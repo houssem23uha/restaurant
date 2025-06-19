@@ -57,11 +57,11 @@ export interface Customer extends Authentification {
   firstname: string;
   lastname: string;
   phone: string;
-  photo?: string;
-  orders: Order[];
+  photo: string;
   addresses: Address[];
   reservations: Reservation[];
   items: Item[];
+  orders: Order[]; 
 }
 
 export interface Order {
