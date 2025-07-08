@@ -1,48 +1,80 @@
-import { Route, BrowserRouter, Routes } from "react-router-dom";
-
-import styles from "./Content.module.scss";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Menu from "./Menu";
 import HomeContent from "./HomeContent";
 import FavoriteDishes from "./FavoriteDishes";
-import Rest from "./tests/Rest";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ItemsList from "./testApi/ItemsList";
 import ItemDetails from "./testApi/ItemDetails";
 import ItemForm from "./testApi/ItemForm";
 import ItemFormUpdate from "./testApi/ItemFormUpdate";
+import OrderList from "./OrderList";
+import styles from "./Content.module.scss";
 
-const queryClient = new QueryClient();
+import Carte from "./Carte";
+import Login from "./Login";
+import Register from "./Register";
+import Account from "./Account";
+import ReservationComponent from "./ReservationComponent.tsx";
+import CustomerReservations from "./CustomerReservations.tsx";
 
 function Content() {
+  const location = useLocation();
+  const noLayoutRoutes = ["/reservation", "/account", "/register", "/login"];
+  const isNoLayout = noLayoutRoutes.includes(location.pathname);
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
+    <>
+      {isNoLayout ? (
+        <Routes>
+          {/* Réservations */}
+          <Route path="/reservation" element={<ReservationComponent />} />
+
+          {/* Compte utilisateur */}
+          <Route path="/account" element={<Account />} />
+
+          {/* Authentification */}
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+        </Routes>
+      ) : (
         <div className={`${styles.appContainer} d-flex flex flex-column`}>
           <div className={`${styles.content} container flex-fill mt-2 p-4`}>
             <Routes>
+              <Route path="/" element={<HomeContent />} />
+
+              {/* Items */}
               <Route path="/liste" element={<ItemsList />} />
-              <Route path="/ItemDetails/:id" element={<ItemDetails />} />
               <Route path="/ItemsList" element={<ItemsList />} />
+              <Route path="/ItemDetails/:id" element={<ItemDetails />} />
               <Route path="/ItemForm" element={<ItemForm />} />
               <Route path="/ItemFormUpdate/:id" element={<ItemFormUpdate />} />
-              <Route path="/" element={<HomeContent />} />
+
+              {/* Menu & Carte */}
               <Route path="/menu" element={<Menu />} />
               <Route path="/menu/items" element={<HomeContent />} />
-              <Route path="/orders" element={<HomeContent />} />
+              <Route path="/carte" element={<Carte />} />
+
+              {/* Commandes */}
+              <Route path="/orders" element={<OrderList />} />
               <Route path="/orders/history" element={<HomeContent />} />
-              <Route path="/reservation" element={<HomeContent />} />
+
+              {/* Informations complémentaires */}
               <Route path="/delivery-info" element={<HomeContent />} />
-              <Route path="/account" element={<HomeContent />} />
+              <Route path="/contact" element={<HomeContent />} />
+
+              {/* Compte utilisateur */}
               <Route path="/account/favoris" element={<FavoriteDishes />} />
               <Route path="/account/orders" element={<HomeContent />} />
               <Route path="/account/settings" element={<HomeContent />} />
-              <Route path="/contact" element={<HomeContent />} />
-              <Route path="/rest" element={<Rest />} />
+
+              <Route
+                path="/mesreservations"
+                element={<CustomerReservations />}
+              />
             </Routes>
           </div>
         </div>
-      </BrowserRouter>
-    </QueryClientProvider>
+      )}
+    </>
   );
 }
 

@@ -14,37 +14,37 @@ interface GenericModalProps {
 }
 
 function GenericModal({
-  show,
-  showHeader,
-  onClose,
-  title,
-  placement = "end",
-  children,
-}: GenericModalProps) {
+                        show,
+                        showHeader,
+                        onClose,
+                        title,
+                        placement = "end",
+                        children,
+                      }: GenericModalProps) {
   return (
-    <Offcanvas
-      show={show}
-      showHeader={showHeader}
-      onHide={onClose}
-      placement={placement}
-      className={`${styles.customOffcanvas}`}
-    >
-      {showHeader && (
-        <Offcanvas.Header className={`${styles.customOffcanvasHeader}`}>
-          <button className={styles.customClose} onClick={onClose}>
-            <i className="fa-solid fa-xmark"></i>
-          </button>
+      <Offcanvas
+          show={show}
+          showHeader={showHeader}
+          onHide={onClose}
+          placement={placement}
+          className={`${styles.customOffcanvas}`}
+      >
+        {showHeader && (
+            <Offcanvas.Header className={`${styles.customOffcanvasHeader}`}>
+              <button className={styles.customClose} onClick={onClose}>
+                <i className="fa-solid fa-xmark"></i>
+              </button>
 
-          <Offcanvas.Title className={`${styles.customTitle}`}>
-            {title}
-          </Offcanvas.Title>
-        </Offcanvas.Header>
-      )}
+              <Offcanvas.Title className={`${styles.customTitle}`}>
+                {title}
+              </Offcanvas.Title>
+            </Offcanvas.Header>
+        )}
 
-      <Offcanvas.Body className={`${styles.customOffcanvasBody}`}>
-        {children}
-      </Offcanvas.Body>
-    </Offcanvas>
+        <Offcanvas.Body className={`${styles.customOffcanvasBody}`}>
+          {children}
+        </Offcanvas.Body>
+      </Offcanvas>
   );
 }
 

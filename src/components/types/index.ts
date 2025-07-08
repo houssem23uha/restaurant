@@ -1,7 +1,7 @@
 export type Category = "STARTER" | "MAIN" | "DRINK" | "DESSERT"; // compléter si besoin
 export const CATEGORIES: Category[] = ["STARTER", "MAIN", "DRINK", "DESSERT"];
 
-export type Status = "PENDING" | "VALIDATED" | "CANCELLED"; // idem
+export type Status = "PENDING" | "VALIDATED" | "CANCELLED " | "INCOMPLETE"; // idem
 
 export type Slot = "MORNING" | "AFTERNOON" | "EVENING"; // idem
 
@@ -37,6 +37,13 @@ export interface Address {
   // ajouter d'autres champs si tu en as dans ton modèle Java
   // Relation vers Customer par id ou objet selon besoin côté frontend
   customerId?: number; // ou customer?: Customer si tu veux l'objet complet
+  version: number;
+}
+
+export function toStringAdresse(adresse: Address): string {
+  const { street = "", postalCode = "", city = "" } = adresse;
+
+  return `${street}, ${postalCode} ${city}`.trim();
 }
 
 export interface Authentification {
@@ -50,15 +57,15 @@ export interface Customer extends Authentification {
   firstname: string;
   lastname: string;
   phone: string;
-  photo?: string;
-  orders: Order[];
+  photo: string;
   addresses: Address[];
   reservations: Reservation[];
   items: Item[];
+  orders: Order[]; 
 }
 
 export interface Order {
-  id: number;
+  id?: number;
   totalPrice: number;
   status: Status;
   order_lines: OrderLine[];
@@ -76,10 +83,14 @@ export interface OrderLine {
 }
 
 export interface Reservation {
-  id: number;
+  id?: number;
+  date: string;  // ISO date string
   slot: Slot;
   nbPersons: number;
-  date: string; // ou Date, selon comment tu veux gérer
-  customer: Customer;
-  version: number;
+  customer: {
+    id: number;
+    firstname: string;
+    lastname: string;
+  };
+  version?: number;
 }

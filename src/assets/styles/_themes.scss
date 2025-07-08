@@ -22,9 +22,18 @@
 }
 
 .btn-reverse-primary {
-  border: 2px solid var(--primary);
   color: var(--primary);
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.322);
+  border-top: 2px solid var(--primary);
+  border-bottom: 2px solid var(--primary);
+  border-left: none;
+  border-right: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 16px;
+  
+  border-radius: 4px;
+  outline: none;
   &:hover {
     border: 2px solid var(--primary);
   }

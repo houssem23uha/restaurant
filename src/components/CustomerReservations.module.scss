@@ -1,0 +1,212 @@
+/* TITRES ET EN-TÊTES */
+.MenuTitle {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+
+  h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    color: #5a4b42; /* brun */
+    border-bottom: 2px solid #ffd369; /* doré */
+    padding-bottom: 0.5rem;
+    margin: 0;
+  }
+}
+
+.customerSection {
+  margin-bottom: 40px;
+
+  h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    text-align: left;
+    border-bottom: 2px solid #f2c572; /* doré clair */
+    padding-bottom: 8px;
+    color: #5a4b42; /* brun foncé */
+  }
+
+  p {
+    font-size: 1rem;
+    color: #5a4b42; /* brun foncé */
+    margin-top: 10px;
+  }
+}
+
+/* ERREURS */
+
+.error {
+  color: #b00020; /* rouge foncé */
+  background-color: #ffbdbd; /* rouge clair */
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  text-align: center;
+  border: 1px solid #b00020;
+}
+
+/* TABLE DE RÉSERVATION */
+
+.reservationTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+  background-color: #fef8ed; /* crème très clair */
+  border-radius: 12px;
+  overflow: hidden;
+
+  th,
+  td {
+    padding: 14px 18px;
+    text-align: left;
+    border-bottom: 1px solid #a36c1a; /* marron doré */
+  }
+
+  th {
+    background-color: #5c4200; /* marron doré foncé */
+    font-weight: 700;
+    font-size: 1rem;
+    color: #fff7e0; /* crème clair */
+  }
+
+  td {
+    font-size: 1rem;
+    color: #5a4b42; /* brun foncé */
+    vertical-align: middle;
+  }
+
+  .reservationRow {
+    &:last-child {
+      td {
+        border-bottom: none;
+      }
+    }
+  }
+
+  /* Centrage horizontal et vertical pour colonnes 2 et 3 (actions) */
+  tr {
+    td:nth-child(2),
+    td:nth-child(3) {
+      text-align: center;
+      vertical-align: middle;
+      padding: 0 10px;
+    }
+  }
+
+  /* BOUTONS DANS LA TABLE */
+
+  button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 6px 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    width: 36px;
+    margin: 0 auto;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+
+    svg {
+      font-size: 1.2rem;
+      color: #a36c1a; /* marron doré */
+    }
+
+    &:hover {
+      background-color: rgba(163, 108, 26, 0.3);
+    }
+
+    &:focus-visible {
+      outline: 2px solid #ffd369;
+      outline-offset: 2px;
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+  }
+
+  /* FORMULAIRE DANS LA TABLE */
+
+  form {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+    padding: 12px;
+    background-color: #fdf7ed; /* crème très clair */
+    border-radius: 12px;
+
+    label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+      color: #5a4b42; /* brun foncé */
+
+      input,
+      select {
+        border: 1px solid #cbb189; /* beige */
+        border-radius: 6px;
+        padding: 6px 8px;
+        font-family: inherit;
+        font-size: 1rem;
+        background-color: #fff;
+        color: #2a2a2a;
+      }
+    }
+  }
+}
+
+/* BOUTONS CONFIRMATION ET ANNULATION */
+
+.confirmButton {
+  padding: 8px 16px;
+  font-weight: 700;
+  cursor: pointer;
+  background-color: #f5b800; /* jaune doré vif */
+  border: none;
+  border-radius: 6px;
+  color: #2a2a2a; /* texte sombre */
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #ffd369; /* doré clair */
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.cancelButton {
+  padding: 8px 16px;
+  font-weight: 700;
+  cursor: pointer;
+  background-color: #e76b6b; /* rouge moyen */
+  border: none;
+  border-radius: 6px;
+  color: #6b1b1b; /* rouge foncé */
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #ff8a8a; /* rouge clair */
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.pastReservation {
+  opacity: 0.5;
+  font-style: italic;
+}
+

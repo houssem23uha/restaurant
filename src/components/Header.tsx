@@ -1,12 +1,14 @@
 import { useState } from "react";
 import styles from "./Header.module.scss";
-import HeaderBar from "./HeaderBar";
 import MenuModal from "./MenuModal";
 import GenericModal from "./GenericModal";
 import Basket from "./Basket";
-/* import MenuModal from "./MenuModal";
- */
+import HeaderBar from "./HeaderBar.tsx";
+import { useCustomer } from "./CustomerContext.tsx";
+
 function Header() {
+  const { customer } = useCustomer();
+
   const [showModal, setModalOpen] = useState(false);
   const [showPanier, setShowPanier] = useState(false);
 
@@ -46,44 +48,44 @@ function Header() {
             <span className="separator"></span>
 
             <li>
-              <a href="/account/orders">Commandes</a>
+              <a href="/orders">Commandes</a>
             </li>
           </ul>
         </div>
-      </div>
-      <div className="row">
-        <div className="col">
-          <ul
-            className={`${styles.headerNavItem} d-flex flex-row justify-content-center align-items-center ms-3 me-3 gap-4`}
-          >
-            <span className="separatorSecondary"></span>
+        <div className="row">
+          <div className="col">
+            <ul
+              className={`${styles.headerNavItem} d-flex flex-row justify-content-center align-items-center ms-3 me-3 gap-4`}
+            >
+              <span className="separatorSecondary"></span>
 
-            <li>
-              <a href="/account/favoris">
-                <i className="fa-solid fa-heart fa-lg me-2"></i>
-                Favories
-              </a>
-            </li>
-            <span className="separatorSecondary"></span>
+              <li>
+                <a href="/account/favoris">
+                  <i className="fa-solid fa-heart fa-lg me-2"></i>
+                  Favories
+                </a>
+              </li>
+              <span className="separatorSecondary"></span>
 
-            <li>
-              <a href="#" onClick={() => setShowPanier(true)}>
-                <i className="fa-solid fa-basket-shopping fa-lg me-2"></i>
-                Panier
-              </a>
-              {showPanier && (
-                <GenericModal
-                  show={showPanier}
-                  showHeader={true}
-                  onClose={() => setShowPanier(false)}
-                  title="Mon panier"
-                  placement="start"
-                >
-                  <Basket />
-                </GenericModal>
-              )}
-            </li>
-          </ul>
+              <li>
+                <a href="#" onClick={() => setShowPanier(true)}>
+                  <i className="fa-solid fa-basket-shopping fa-lg me-2"></i>
+                  Panier
+                </a>
+                {showPanier && (
+                  <GenericModal
+                    show={showPanier}
+                    showHeader={true}
+                    onClose={() => setShowPanier(false)}
+                    title="Mon panier"
+                    placement="start"
+                  >
+                    <Basket client={customer} />
+                  </GenericModal>
+                )}
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>

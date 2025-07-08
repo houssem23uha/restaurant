@@ -1,22 +1,20 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import styles from "./SearchItem.module.scss";
+import { useItems } from "./hooks/items/useItems";
 import BasketPreviewItem from "./BasketPreviewItem";
 
-const tabsData = ["Entree", "Plat", "Dessert", "Boisson"];
+function SearchItem({ order, setOrderDataChange, onClose }) {
+  const { data: items, isLoading, error } = useItems();
 
-function SearchItem() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const tabsRef = useRef([]);
-  const sliderRef = useRef(null);
-  const [totalPrice, setTotalPrice] = useState(0);
+  const [filter, setFilter] = useState<string>("");
 
-  useEffect(() => {
-    const activeTab = tabsRef.current[activeIndex];
-    if (activeTab && sliderRef.current) {
-      sliderRef.current.style.width = `${activeTab.offsetWidth}px`;
-      sliderRef.current.style.left = `${activeTab.offsetLeft}px`;
-    }
-  }, [activeIndex]);
+  if (isLoading) return <p>Chargement...</p>;
+  if (error instanceof Error) return <p>Erreur : {error.message}</p>;
+
+  // Appliquer le filtre (ex: par catégorie, type, etc.)
+  const filteredItems = items.filter((item) =>
+    item.name.toLowerCase().includes(filter.toLowerCase())
+  );
 
   return (
     <div className={`${styles.SearchItem} flex-fill row d-flex flex-column`}>
@@ -25,31 +23,15 @@ function SearchItem() {
           className={`${styles.SearchInputContainer} d-flex justify-content-start align-items-center mb-3`}
         >
           <i className="fa-brands fa-searchengin fa fa-2x"></i>
-          <form className=" flex-fill d-flex flex-row align-items-center p-2 gap-2">
+          <form className="flex-fill d-flex flex-row align-items-center p-2 gap-2">
             <input
               type="text"
-              placeholder="Une recette, un ingrédient..."
-              className="flex-fill "
+              placeholder="Un plat, un dessert..."
+              className="flex-fill"
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
             />
           </form>
-        </div>
-
-        <div
-          className={`${styles.SliderTabs} d-flex justify-content-center align-items-center gap-2`}
-        >
-          {tabsData.map((label, index) => (
-            <button
-              key={index}
-              ref={(el) => {
-                tabsRef.current[index] = el;
-              }}
-              className={`${styles.TabButton} flex-grow-1`}
-              onClick={() => setActiveIndex(index)}
-            >
-              {label}
-            </button>
-          ))}
-          <div className={`${styles.Slider}`} ref={sliderRef} />
         </div>
       </div>
       <div
@@ -58,37 +40,21 @@ function SearchItem() {
         <div
           className={`${styles.Order}  basket-list flex-fill  d-flex flex-column mb-3`}
         >
-          {/*           <p>Vous n'avez pas encore sélectionné de repas.</p>
-           */}
+          {(!filteredItems || filteredItems.length === 0) && (
+            <p>Aucun plat ne correspond à vos critères de recherche.</p>
+          )}
+
           <div className={`${styles.BasketList}`}>
-            <BasketPreviewItem
-              isSearchComponent={true}
-              quantity={0}
-              price={3}
-              totalPrice={totalPrice}
-              setTotalPrice={setTotalPrice}
-            />
-            <BasketPreviewItem
-              isSearchComponent={true}
-              quantity={0}
-              price={6}
-              totalPrice={totalPrice}
-              setTotalPrice={setTotalPrice}
-            />
-            <BasketPreviewItem
-              isSearchComponent={true}
-              quantity={0}
-              price={2}
-              totalPrice={totalPrice}
-              setTotalPrice={setTotalPrice}
-            />
-            <BasketPreviewItem
-              isSearchComponent={true}
-              quantity={0}
-              price={2}
-              totalPrice={totalPrice}
-              setTotalPrice={setTotalPrice}
-            />
+            {filteredItems.map((item) => (
+              <BasketPreviewItem
+                isSearchComponent={true}
+                ligne={{ quantity: 1, line_price: item.price, item }}
+                onLineChange={() => {}}
+                onLineDelete={() => {}}
+                setOrderChange={() => setOrderDataChange}
+                onClose={onClose}
+              />
+            ))}
           </div>
         </div>
       </div>

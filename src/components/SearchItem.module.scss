@@ -44,4 +44,27 @@
       }
     }
   }
+  .Content {
+    padding: 0 1.6rem;
+    .AdditionCard {
+      padding: 1.8rem 1.2rem;
+      border-radius: 2rem;
+      background-color: var(--gray-3);
+      button {
+        border: 1px solid var(--primary);
+      }
+    }
+    .Order {
+      p {
+        margin: 1.5rem 0 0 2rem;
+        font-weight: bold;
+      }
+
+      .BasketList > *:not(:last-child) {
+        border-bottom: 2px solid var(--gray-2);
+        margin-bottom: 0.5rem;
+        padding-bottom: 0.5rem;
+      }
+    }
+  }
 }
